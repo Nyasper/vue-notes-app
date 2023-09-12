@@ -7,7 +7,7 @@ Este es mi primer proyecto, es una aplicación para crear, editar, actualizar y 
 En el frontend utilicé VUE JS con CSS para la interfaz, y realice las peticiones a la API de mi backend con la librería 'Axios'.
 En el backend utilicé NODE JS con la librería ´Express jS´, con esta librería cree una api que recibe las peticiones del Frontend y con la ayuda de la librería ´Mongoose´ envía una consulta a la base de datos MongoDB trayendo la información de las notas(título y contenido).
 
-Inglish
+English
 
 This is my first project, it is an application to create,edit,update and delete(CRUD) notes. The technologies that I used to carry out this project were the following:
 On the frontend I used VUE JS with CSS for the interface, and I made my backend API requests with the 'Axios' library.
