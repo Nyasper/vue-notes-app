@@ -19,13 +19,13 @@ In the backend I used NODE JS with the ´Express jS´ library, with this library
 
 
 Page Home (All notes)
-![about](/Screenshots/home.jpeg)
+![page-home](/Screenshots/home.jpeg)
 
 Create a Note:
-![about](/Screenshots/create.jpeg)
+![page-create-note](/Screenshots/create.jpeg)
 
 Update and Delete a Note:
-![about](/Screenshots/update.jpeg)
+![page-update-delete-notes](/Screenshots/update.jpeg)
 
 Page About:
-![about](/Screenshots/about.jpeg)
+![page-about](/Screenshots/about.jpeg)
