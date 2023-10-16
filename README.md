@@ -18,14 +18,14 @@ In the backend I used NODE JS with the ´Express jS´ library, with this library
 # SCREENSHOTS
 
 
-Page Home (All notes)
+Page Home (All notes)  
 ![page-home](/Screenshots/home.jpeg)
 
-Create a Note:
+Create a Note  
 ![page-create-note](/Screenshots/create.jpeg)
 
-Update and Delete a Note:
+Update and Delete a Note  
 ![page-update-delete-notes](/Screenshots/update.jpeg)
 
-Page About:
+Page About  
 ![page-about](/Screenshots/about.jpeg)
