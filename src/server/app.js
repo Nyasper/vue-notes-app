@@ -12,6 +12,5 @@ app.use(morgan("dev")); //Morgan muestra por consola los recursos que llegan al 
 app.use(cors()); // CORS permite la conexion entre distintos puertos, en este caso el frontend en con el backend.
 app.use(Express.json()); //esta opcion habilita las solicitudes en JSON
 app.use("/api", tasksRoutes);
-app.use(Express.static("../../dist"));
 
 export default app;
