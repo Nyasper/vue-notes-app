@@ -64,11 +64,11 @@ async function saveTask(){
   height: 100%;
   width: 40%;
   overflow: auto;
-  
 }
 
 
 #addNote > h2{
+  font-size: 2.4em;
   margin-top: 10px;
   overflow-wrap: break-word;
   display: block;
@@ -76,11 +76,10 @@ async function saveTask(){
   
 }
 #addNote > p{
+  font-size: 1.5em;
   overflow-wrap: break-word;
   display: block;
-  max-width: 90%;
-  font-size: 18px;
-  
+  max-width: 90%
 }
 
 #input-title{

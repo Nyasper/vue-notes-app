@@ -28,7 +28,7 @@
 </template>
 
 
-<style>
+<style scoped>
 
 #hareIMGContainer{
   display: flex;

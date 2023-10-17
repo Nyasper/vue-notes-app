@@ -71,11 +71,11 @@ function cancel(){
 <style>
 
 #taskMain{
+  font-size: 1.8em;
   margin: auto;
   margin-top: 6vh;
   width: 40vw;
   height: 75vh;
-
 }
 
 #button-container{
@@ -84,8 +84,6 @@ function cancel(){
   align-items: center;
   justify-content: center;
 }
-
-
 
 
 </style>
