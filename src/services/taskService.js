@@ -1,43 +1,41 @@
-// import axios from "axios";
-import axios from "axios";
+import axios from "./axios.js"
 
 export async function createTask(task) {
   try {
-    await axios.post("http://localhost:3000/api/tasks", task);
+    return await axios.post("tasks", task);
   } catch (error) {
     console.log(error);
   }
 }
 
-export async function viewAllTaks() {
+export async function viewAllTasks() {
   try {
-    const response = await axios.get("http://localhost:3000/api/tasks");
-    return response.data;
+    return await axios.get("tasks/all");
+  } catch (error) {
+    console.log(error);
+    return null
+  }
+}
+
+export async function getTaskById(id) {
+  try {
+    return await axios.get(`tasks/${id}`);
   } catch (error) {
     console.log(error);
   }
 }
 
-export async function viewIdTask(id) {
+export async function updateTask(task) {
   try {
-    const response = await axios.get(`http://localhost:3000/api/tasks/${id}`);
-    return response.data;
+    return await axios.put('tasks', task);
   } catch (error) {
     console.log(error);
   }
 }
 
-export async function updateIdTask(id, task) {
+export async function deleteTaskById(id) {
   try {
-    await axios.put(`http://localhost:3000/api/tasks/${id}`, task);
-  } catch (error) {
-    console.log(error);
-  }
-}
-
-export async function deleteIdTask(id, task) {
-  try {
-    await axios.delete(`http://localhost:3000/api/tasks/${id}`, task);
+    return await axios.delete(`tasks/${id}`);
   } catch (error) {
     console.log(error);
   }
