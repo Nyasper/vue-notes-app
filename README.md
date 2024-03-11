@@ -1,31 +1,35 @@
-# Proyecto 1 - Aplicación de Notas.
+# Español
 
+Este es mi primer proyecto, es una aplicación para crear, editar,
+actualizar y eliminar(CRUD) notas que tienen un titulo y una
+descripcion. Incorpora un sistema de inicio de sesión para facilitar la
+gestión de notas asociadas a usuarios registrados. Las tecnologías que
+utilicé para realizar este proyecto fueron VUE JS para desarrollar toda
+la interfaz, y para las peticiones a la API de mi backend utilize la
+librería 'Axios'.
 
-Español
+# English
 
-Este es mi primer proyecto, es una aplicación para crear, editar, actualizar y eliminar(CRUD) notas. Las tecnologías que utilicé para realizar este proyecto fueron las siguientes: 
-En el frontend utilicé VUE JS con CSS para la interfaz, y realice las peticiones a la API de mi backend con la librería 'Axios'.
-En el backend utilicé NODE JS con la librería ´Express jS´, con esta librería cree una api que recibe las peticiones del Frontend y con la ayuda de la librería ´Mongoose´ envía una consulta a la base de datos MongoDB trayendo la información de las notas(título y contenido).
-
-English
-
-This is my first project, it is an application to create,edit,update and delete(CRUD) notes. The technologies that I used to carry out this project were the following:
-On the frontend I used VUE JS with CSS for the interface, and I made my backend API requests with the 'Axios' library.
-In the backend I used NODE JS with the ´Express jS´ library, with this library I created an api that receives the requests from the Frontend and with the help of the ´Mongoose´ library sends a query to the MongoDB database bringing the information of the notes (title and content).
-
-
+This is my first project, it is an application to create, edit, update
+and delete(CRUD) notes that have a title and a description. Incorporates
+a login system to facilitate note management associated with registered
+users. The technologies I used to carry out this project were VUE JS to
+develop the entire interface, and for requests to my API backend uses
+the 'Axios' library.
 
 # SCREENSHOTS
 
-
 Page Home (All notes)  
-![page-home](/Screenshots/home.jpeg)
+![all-notes](/Screenshots/notes.png)
 
 Create a Note  
-![page-create-note](/Screenshots/create.jpeg)
+![create-note](/Screenshots/createNote.png)
 
 Update and Delete a Note  
-![page-update-delete-notes](/Screenshots/update.jpeg)
+![update-delete-notes](/Screenshots/editNote.png)
+
+Login / Register page  
+![page-about](/Screenshots/registerLogin.png)
 
 Page About  
-![page-about](/Screenshots/about.jpeg)
+![page-about](/Screenshots/about.png)

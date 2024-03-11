@@ -16,6 +16,7 @@ import tasksList from "./pages/tasksList.vue";
 import taskDetail from "./pages/taskDetail.vue";
 import taskCreate from "./pages/taskCreate.vue";
 import adminPage from "./pages/adminPage.vue";
+import userDetailAdminPage from "./pages/userDetailAdminPage.vue";
 
 
 const routes = [
@@ -75,6 +76,22 @@ const routes = [
     component: adminPage,
     beforeEnter: async (to, from) => {
       if (!(await isAdmin())) return { name: 'tasksList' }
+    }
+  },
+  {
+    name: "adminDetail",
+    path: "/admin/:username",
+    component: userDetailAdminPage,
+    beforeEnter: async (to, from) => {
+      if (!(await isAdmin())) return { name: 'tasksList' }
+    }
+  },
+  {
+    name: "adminTaskDetail",
+    path: "/admin/:username/:id",
+    component: taskDetail,
+    beforeEnter: async (to, from) => {
+      if (!(await isLogged())) return { name: 'login' }
     }
   },
   {

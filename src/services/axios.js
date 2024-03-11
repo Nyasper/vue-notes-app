@@ -1,11 +1,11 @@
 import axios from "axios";
 
-//localUrl;
-// const url = 'http://localhost:3000/'
 
+const url = 'http://localhost:3000/' //localUrl;
 
-//cloudUrl
-const url = 'https://proyecto-1-backend-iota.vercel.app/'
+// const url = 'https://proyecto-1-backend-iota.vercel.app/' //cloudUrl
+console.log((await axios.get(url)).data)
+
 const axiosInstance = axios.create({
   baseURL: url + 'api/v1/',
   headers: {

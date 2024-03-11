@@ -65,6 +65,12 @@
 		border: 2px solid rgb(24, 24, 24);
 	}
 
+	h1 {
+		font-size: 3em;
+		text-align: center;
+		margin: 30px;
+	}
+
 	#mainContainer {
 		width: 90%;
 		margin: 0 auto;

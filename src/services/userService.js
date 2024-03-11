@@ -31,7 +31,7 @@ export async function isLogged() {
 	try {
 		const { data, status } = await axios.get('user/logged');
 		const { logged } = data;
-
+		console.log({ data, status })
 		if (status === 200 && logged) {
 			return true
 		}

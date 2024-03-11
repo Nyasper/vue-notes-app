@@ -8,7 +8,7 @@
 
 	onMounted(async () => {
 		const response = await viewAllTasks();
-		if (response) {
+		if (response && response.status === 200) {
 			tasks.value.data = response.data;
 			tasks.value.loading = false;
 		} else {
@@ -19,14 +19,14 @@
 
 <template>
 	<div v-if="tasks">
-		<h1 class="title">All Notes</h1>
+		<h1>All Notes</h1>
 		<h1 v-if="tasks.loading">Loading...</h1>
 		<h2
 			v-else-if="!tasks.loading && tasks.data.length === 0"
 			class="createMessage"
 		>
 			There are no tasks created, start by
-			<router-link to="/tasks/create">creating one</router-link>
+			<router-link :to="{ name: 'taskCreate' }">creating one</router-link>
 		</h2>
 		<ul id="taskContainer" v-else>
 			<taskComponent
@@ -47,11 +47,6 @@
 </template>
 
 <style>
-	.title {
-		text-align: center;
-		margin: 30px;
-	}
-
 	.createMessage {
 		font-size: 2.5em;
 		color: rgb(163, 48, 48);
