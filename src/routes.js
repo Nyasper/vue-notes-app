@@ -6,7 +6,6 @@ import { isLogged, isAdmin } from "./services/userService";
 //componentes
 import about from "./components/about.vue";
 import notFound from "./components/notfound.vue";
-import loadingScreen from "./components/loadingScreen.vue";
 
 //Pages
 import homePage from "./pages/home.vue";
@@ -93,11 +92,6 @@ const routes = [
     beforeEnter: async (to, from) => {
       if (!(await isLogged())) return { name: 'login' }
     }
-  },
-  {
-    name: "loading",
-    path: "/loading",
-    component: loadingScreen,
   },
   {
     path: "/:patchMatch(.*)*",
