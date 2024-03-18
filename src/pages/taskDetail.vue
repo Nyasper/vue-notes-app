@@ -28,9 +28,14 @@
 				></textarea>
 			</div>
 			<div id="buttonsContainer">
-				<button @click="updateTaskFunc">Update Note</button>
-				<button @click="cancelButton" :disabled="task === defaultTask">
-					Cancel
+				<button
+					@click="updateTaskFunc"
+					:disabled="
+						task?.title === defaultTask?.title &&
+						task?.description === defaultTask?.description
+					"
+				>
+					Update Note
 				</button>
 				<button @click="deleteTask">Delete Note</button>
 			</div>
@@ -55,12 +60,12 @@
 	const { id: taskId } = useRoute().params;
 
 	const task = ref(null);
-	let defaultTask = null;
+	const defaultTask = ref(null);
 
 	onMounted(async () => {
 		const { data } = await getTaskById(taskId);
 		task.value = data;
-		defaultTask = {
+		defaultTask.value = {
 			title: data.title,
 			description: data.description,
 		};
@@ -88,18 +93,14 @@
 
 	async function deleteTask() {
 		try {
-			const response = await deleteTaskById(taskId);
-			if (response.status === 200) router.push('/tasks');
+			const ask = confirm('delete task?');
+			if (ask) {
+				const response = await deleteTaskById(taskId);
+				if (response.status === 200) router.push('/tasks');
+			}
 		} catch (error) {
 			console.error('Error on delete task');
 			location.reload();
-		}
-	}
-
-	function cancelButton() {
-		if (defaultTask) {
-			task.value.title = defaultTask.title;
-			task.value.description = defaultTask.description;
 		}
 	}
 </script>

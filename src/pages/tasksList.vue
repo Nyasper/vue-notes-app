@@ -15,6 +15,17 @@
 			tasks.value = null;
 		}
 	});
+
+	function obtainDate(date) {
+		const myDate = new Date(date);
+
+		const day = myDate.getDate();
+		const month = myDate.getMonth() + 1;
+		const year = myDate.getFullYear();
+		const hour = myDate.getHours();
+		const minutes = myDate.getMinutes();
+		return `${day}/${month}/${year} - ${hour}:${minutes}`;
+	}
 </script>
 
 <template>
@@ -33,7 +44,7 @@
 				v-for="task in tasks.data"
 				:title="task.title"
 				:description="task.description"
-				:created="task.created"
+				:created="obtainDate(task.createdAt)"
 				:key="task.id"
 				@click.prevent="
 					router.push({ name: 'taskDetail', params: { id: task.id } })

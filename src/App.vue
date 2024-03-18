@@ -62,7 +62,7 @@
 	button:disabled:hover {
 		cursor: no-drop;
 		background-color: transparent;
-		border: 2px solid rgb(24, 24, 24);
+		border: 2px solid rgb(255, 255, 255);
 	}
 
 	h1 {
