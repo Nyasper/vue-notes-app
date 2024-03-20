@@ -3,7 +3,7 @@
 		v-model:username="inputUsername"
 		v-model:password="inputPassword"
 		button-label="Login"
-		:submit-button="buttonLogin"
+		:submit-event="submitHandler"
 	/>
 	<p id="errorMessage" v-if="loginError">
 		ERROR: Invalid Credentialts, try again or
@@ -21,16 +21,23 @@
 	const inputPassword = ref('');
 	const loginError = ref(false);
 
-	async function buttonLogin() {
+	async function submitHandler() {
 		try {
 			const credentialts = {
 				username: inputUsername.value,
 				password: inputPassword.value,
 			};
-			const { status } = await login(credentialts);
-			if (status === 200) {
-				router.push({ name: 'tasksList' });
-			} else throw new Error('ERROR on Login:');
+
+			const res = await login(credentialts);
+			const delay = async (ms) => {
+				return new Promise((resolve) => {
+					setTimeout(resolve, ms);
+				});
+			};
+			await delay(2000);
+			console.log(res);
+
+			router.push({ name: 'tasksList' });
 		} catch (error) {
 			console.error(error);
 			loginError.value = true;

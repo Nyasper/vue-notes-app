@@ -6,7 +6,7 @@
 			<input
 				type="text"
 				placeholder="Add a Title"
-				v-model="title"
+				v-model.trim="title"
 				id="input-title"
 				required
 				maxlength="60"
@@ -14,7 +14,7 @@
 			<textarea
 				id="input-description"
 				placeholder="Add a Description"
-				v-model="description"
+				v-model.trim="description"
 				required
 			></textarea>
 			<button id="saveButton" :disabled="title.length === 0">Save</button>

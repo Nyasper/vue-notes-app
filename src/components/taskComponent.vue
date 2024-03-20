@@ -2,7 +2,7 @@
 	<li class="task">
 		<h2>{{ title }}</h2>
 		<p>{{ description }}</p>
-		<span v-if="created" id="created">Created Date: {{ created }}</span>
+		<span v-if="created" id="created">{{ created }}</span>
 	</li>
 </template>
 

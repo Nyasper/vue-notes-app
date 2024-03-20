@@ -1,5 +1,7 @@
 import { createRouter, createWebHistory } from "vue-router";
-import { isLogged, isAdmin } from "./services/userService";
+import { auth } from "./services/userService";
+import { useAuthStore } from "./stores/authStore";
+
 
 
 
@@ -29,7 +31,7 @@ const routes = [
     path: "/tasks",
     component: tasksList,
     beforeEnter: async (to, from) => {
-      if (!(await isLogged())) return { name: 'login' }
+      if (!(await auth()).logged) return { name: 'login' }
     }
   },
   {
@@ -37,7 +39,7 @@ const routes = [
     path: "/tasks/create",
     component: taskCreate,
     beforeEnter: async (to, from) => {
-      if (!(await isLogged())) return { name: 'login' }
+      if (!(await auth()).logged) return { name: 'login' }
     }
   },
   {
@@ -45,7 +47,7 @@ const routes = [
     path: "/tasks/:id",
     component: taskDetail,
     beforeEnter: async (to, from) => {
-      if (!(await isLogged())) return { name: 'login' }
+      if (!(await auth()).logged) return { name: 'login' }
     }
   },
   {
@@ -58,7 +60,7 @@ const routes = [
     path: "/register",
     component: register,
     beforeEnter: async (to, from) => {
-      if ((await isLogged())) return { name: 'tasksList' }
+      if ((await auth()).logged) return { name: 'tasksList' }
     }
   },
   {
@@ -66,7 +68,7 @@ const routes = [
     path: "/login",
     component: login,
     beforeEnter: async (to, from) => {
-      if ((await isLogged())) return { name: 'tasksList' }
+      if ((await auth()).logged) return { name: 'tasksList' }
     }
   },
   {
@@ -74,7 +76,7 @@ const routes = [
     path: "/admin",
     component: adminPage,
     beforeEnter: async (to, from) => {
-      if (!(await isAdmin())) return { name: 'tasksList' }
+      if (!(await auth()).admin) return { name: 'tasksList' }
     }
   },
   {
@@ -82,7 +84,7 @@ const routes = [
     path: "/admin/:username",
     component: userDetailAdminPage,
     beforeEnter: async (to, from) => {
-      if (!(await isAdmin())) return { name: 'tasksList' }
+      if (!(await auth()).admin) return { name: 'tasksList' }
     }
   },
   {
@@ -90,7 +92,7 @@ const routes = [
     path: "/admin/:username/:id",
     component: taskDetail,
     beforeEnter: async (to, from) => {
-      if (!(await isLogged())) return { name: 'login' }
+      if (!(await auth()).admin) return { name: 'login' }
     }
   },
   {
@@ -103,5 +105,12 @@ const router = createRouter({
   history: createWebHistory(),
   routes,
 });
+
+
+router.beforeEach(async (to, from) => {
+  const { setAuthState } = useAuthStore()
+  const authState = await auth()
+  setAuthState(authState)
+})
 
 export default router;

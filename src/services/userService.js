@@ -1,8 +1,8 @@
-import axios from "./axios.js"
+import { axiosInstance } from "./axios.js"
 
 export async function register(credentials) {
 	try {
-		return await axios.post("user/register", credentials);
+		return await axiosInstance.post("user/register", credentials);
 	} catch (error) {
 		console.log(error);
 	}
@@ -10,8 +10,7 @@ export async function register(credentials) {
 
 export async function login(credentials) {
 	try {
-		const response = await axios.post("user/login", credentials);
-		console.log(response)
+		const response = await axiosInstance.post("user/login", credentials);
 		return response
 	} catch (error) {
 		console.log(error);
@@ -20,38 +19,20 @@ export async function login(credentials) {
 
 export async function logout() {
 	try {
-		return await axios.get("user/logout");
+		return await axiosInstance.get("user/logout");
 	} catch (error) {
 		console.log(error);
 	}
 }
 
 
-export async function isLogged() {
-	try {
-		const { data, status } = await axios.get('user/logged');
-		const { logged } = data;
-		console.log({ data, status })
-		if (status === 200 && logged) {
-			return true
+export async function auth() {
+	const response = await axiosInstance.get('user/logged');
+	if (response.data) {
+		return {
+			logged: response.data.logged,
+			admin: response.data.admin
 		}
-		return false
-	} catch (error) {
-		console.log(error);
-		return false
 	}
-}
-
-export async function isAdmin() {
-	try {
-		const { data, status } = await axios.get('user/logged');
-		const { logged, admin } = data;
-		if (status === 200 && logged && admin) {
-			return true
-		}
-		return false
-	} catch (error) {
-		console.log(error);
-		return false
-	}
+	throw new Error('error on verifying logged')
 }

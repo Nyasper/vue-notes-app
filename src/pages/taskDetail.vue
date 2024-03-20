@@ -11,7 +11,7 @@
 					type="text"
 					name="title"
 					id="title"
-					v-model="task.title"
+					v-model.trim="task.title"
 					required
 					maxlength="60"
 				/>
@@ -21,7 +21,7 @@
 				<textarea
 					name="description"
 					id="description"
-					v-model="task.description"
+					v-model.trim="task.description"
 					cols="30"
 					rows="10"
 					required

@@ -1,21 +1,22 @@
 <template>
-	<form id="formContainer">
+	<form id="formContainer" @submit.prevent="submitEvent">
 		<label for="username" style="text-align: center">Username</label>
-		<input type="text" name="username" id="username" v-model="username" />
+		<input type="text" name="username" id="username" v-model.trim="username" />
 		<label for="password" style="text-align: center">Password</label>
-		<input type="password" name="password" id="password" v-model="password" />
-		<button
-			type="submit"
-			id="submitButton"
-			@click.prevent="$props.submitButton"
-		>
+		<input
+			type="password"
+			name="password"
+			id="password"
+			v-model.trim="password"
+		/>
+		<button type="submit" id="submitButton">
 			{{ $props.buttonLabel }}
 		</button>
 	</form>
 </template>
 
 <script setup>
-	defineProps(['buttonLabel', 'submitButton']);
+	defineProps(['buttonLabel', 'submitEvent']);
 
 	const username = defineModel('username');
 	const password = defineModel('password');

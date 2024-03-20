@@ -6,32 +6,32 @@
 					Home
 				</router-link>
 			</li>
-			<li v-if="loginState">
+			<li v-if="authState?.logged">
 				<router-link class="anchorItem" :to="{ name: 'tasksList' }">
 					My Notes
 				</router-link>
 			</li>
-			<li v-if="loginState">
+			<li v-if="authState?.logged">
 				<router-link class="anchorItem" :to="{ name: 'taskCreate' }">
 					Create Note
 				</router-link>
 			</li>
-			<li v-if="!loginState">
+			<li v-if="!authState?.logged">
 				<router-link class="anchorItem" :to="{ name: 'login' }">
 					Login
 				</router-link>
 			</li>
-			<li v-if="!loginState">
+			<li v-if="!authState?.logged">
 				<router-link class="anchorItem" :to="{ name: 'register' }">
 					Register
 				</router-link>
 			</li>
-			<li v-if="adminState">
+			<li v-if="authState?.admin">
 				<router-link class="anchorItem" :to="{ name: 'admin' }">
 					Admin
 				</router-link>
 			</li>
-			<li v-if="loginState" @click="logoutButton" class="logoutButton">
+			<li v-if="authState?.logged" @click="logoutButton" class="logoutButton">
 				<p class="anchorItem">Logout</p>
 			</li>
 			<li>
@@ -40,26 +40,71 @@
 				</router-link>
 			</li>
 		</ul>
+		{{ authState }}
 	</nav>
 </template>
 
 <script setup>
+	import { useAuthStore } from '../stores/authStore';
 	import { storeToRefs } from 'pinia';
-	import { useLogin } from '../stores/loginState';
 	import { logout } from '../services/userService';
 
-	const store = useLogin();
-	const { loginState, adminState } = storeToRefs(store);
+	const store = useAuthStore();
+	const { authState } = storeToRefs(store);
+	import router from '../routes';
 
 	async function logoutButton() {
 		const ask = confirm('Logout?');
 		if (ask) {
 			const response = await logout();
-			if (response.status === 200) {
-				window.location.href = '/login';
+			if (response?.status === 200) {
+				router.push({ name: 'login' });
 			}
 		}
 	}
+
+	//no pude hacerlo
+	/*
+
+	<li v-for="(link, key) in updatedLinks">
+				<router-link class="anchorItem" :key="key" :to="link.path">
+					{{ link.name }}
+				</router-link>
+			</li>
+	interface links {
+		name: string;
+		path: { name: string };
+		condition: boolean;
+	}
+	
+		const rawsLinks = [
+		{ name: 'Home', path: { name: 'home' }, condition: true },
+		{
+			name: 'My Notes',
+			path: { name: 'tasksList' },
+			condition: authState.value?.logged,
+		},
+		{
+			name: 'Create Note',
+			path: { name: 'taskCreate' },
+			condition: true,
+		},
+		{ name: 'Login', path: { name: 'login' }, condition: true },
+		{ name: 'Register', path: { name: 'register' }, condition: true },
+		{ name: 'Admin', path: { name: 'admin' }, condition: false },
+	];
+
+	const links = ref(rawsLinks);
+
+	console.log('estados:', {
+		loginState: authState.value?.logged,
+		adminState: authState.value?.admin,
+	});
+	const updatedLinks = computed(() =>
+		links.value.filter((link) => link.condition)
+	);
+
+	*/
 </script>
 
 <style scoped>

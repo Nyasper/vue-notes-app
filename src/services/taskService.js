@@ -1,8 +1,8 @@
-import axios from "./axios.js"
+import { axiosInstance } from "./axios.js"
 
 export async function createTask(task) {
   try {
-    return await axios.post("tasks", task);
+    return await axiosInstance.post("tasks", task);
   } catch (error) {
     console.log(error);
   }
@@ -10,7 +10,7 @@ export async function createTask(task) {
 
 export async function viewAllTasks() {
   try {
-    return await axios.get("tasks/all");
+    return await axiosInstance.get("tasks/all");
   } catch (error) {
     console.log(error);
     return null
@@ -19,7 +19,7 @@ export async function viewAllTasks() {
 
 export async function getTaskById(id) {
   try {
-    return await axios.get(`tasks/${id}`);
+    return await axiosInstance.get(`tasks/${id}`);
   } catch (error) {
     console.log(error);
   }
@@ -27,7 +27,7 @@ export async function getTaskById(id) {
 
 export async function updateTask(task) {
   try {
-    return await axios.put('tasks', task);
+    return await axiosInstance.put('tasks', task);
   } catch (error) {
     console.log(error);
   }
@@ -35,7 +35,7 @@ export async function updateTask(task) {
 
 export async function deleteTaskById(id) {
   try {
-    return await axios.delete(`tasks/${id}`);
+    return await axiosInstance.delete(`tasks/${id}`);
   } catch (error) {
     console.log(error);
   }
