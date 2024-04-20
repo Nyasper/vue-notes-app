@@ -1,25 +1,25 @@
 import { axiosInstance } from "./axios.js"
 
 export async function getAllUsers() {
-  try {
+  try
+  {
     return await axiosInstance.get('admin/user/all')
-  } catch (error) {
+  } catch (error)
+  {
     console.error('Error on obtain all users', error)
   }
 }
 
 export async function deleteUserById(userId) {
-  try {
+  try
+  {
     return await axiosInstance.delete(`admin/user/${userId}`)
-  } catch (error) {
+  } catch (error)
+  {
     console.error('Error on delete user ById', error)
   }
 }
 
 export async function getAllUsersTasksAdmin(username) {
-  try {
-    return await axiosInstance.get(`admin/user/${username}`)
-  } catch (error) {
-    console.error('Error on obtain all taks', error)
-  }
+  return await axiosInstance.get(`admin/user/${username}`)
 }

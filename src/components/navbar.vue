@@ -6,32 +6,36 @@
 					Home
 				</router-link>
 			</li>
-			<li v-if="authState?.logged">
+			<li v-if="userState?.id && userState?.username">
 				<router-link class="anchorItem" :to="{ name: 'tasksList' }">
 					My Notes
 				</router-link>
 			</li>
-			<li v-if="authState?.logged">
+			<li v-if="userState?.id && userState?.username">
 				<router-link class="anchorItem" :to="{ name: 'taskCreate' }">
 					Create Note
 				</router-link>
 			</li>
-			<li v-if="!authState?.logged">
+			<li v-if="!userState">
 				<router-link class="anchorItem" :to="{ name: 'login' }">
 					Login
 				</router-link>
 			</li>
-			<li v-if="!authState?.logged">
+			<li v-if="!userState">
 				<router-link class="anchorItem" :to="{ name: 'register' }">
 					Register
 				</router-link>
 			</li>
-			<li v-if="authState?.admin">
+			<li v-if="userState?.id && userState?.username && userState?.admin">
 				<router-link class="anchorItem" :to="{ name: 'admin' }">
 					Admin
 				</router-link>
 			</li>
-			<li v-if="authState?.logged" @click="logoutButton" class="logoutButton">
+			<li
+				v-if="userState?.id && userState?.username"
+				@click="logoutButton"
+				class="logoutButton"
+			>
 				<p class="anchorItem">Logout</p>
 			</li>
 			<li>
@@ -40,7 +44,6 @@
 				</router-link>
 			</li>
 		</ul>
-		{{ authState }}
 	</nav>
 </template>
 
@@ -50,13 +53,13 @@
 	import { logout } from '../services/userService';
 
 	const store = useAuthStore();
-	const { authState } = storeToRefs(store);
+	const { userState } = storeToRefs(store);
 	import router from '../routes';
 
 	async function logoutButton() {
 		const ask = confirm('Logout?');
 		if (ask) {
-			const response = await logout();
+			const response = logout();
 			if (response?.status === 200) {
 				router.push({ name: 'login' });
 			}

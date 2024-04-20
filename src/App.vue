@@ -4,11 +4,9 @@
 
 <template>
 	<navbar />
-	<Suspense>
-		<main id="mainContainer">
-			<RouterView />
-		</main>
-	</Suspense>
+	<main id="mainContainer">
+		<RouterView />
+	</main>
 </template>
 
 <style>

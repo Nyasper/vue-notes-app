@@ -1,25 +1,33 @@
 <template>
 	<loginForm
+		mode="login"
 		v-model:username="inputUsername"
 		v-model:password="inputPassword"
-		button-label="Login"
 		:submit-event="submitHandler"
 	/>
-	<p id="errorMessage" v-if="loginError">
-		ERROR: Invalid Credentialts, try again or
-		<router-link to="/register">register.</router-link>
-	</p>
+	<p id="errorMessage" v-if="existsAnError">{{ errorMessage }}</p>
 </template>
 
 <script setup>
-	import { ref } from 'vue';
+	import { ref, computed } from 'vue';
 	import loginForm from '../components/loginForm.vue';
-	import { login } from '../services/userService';
+	import { generateToken } from '../services/userService';
+	import { checkLocalTokenValidity } from '../services/axios';
 	import router from '../routes';
 
 	const inputUsername = ref('');
 	const inputPassword = ref('');
 	const loginError = ref(false);
+
+	//error message handler
+	const errorMessage = ref('');
+	const errorMessageTemplate = 'Error: ';
+	const setErrorMessage = (message = '') => {
+		errorMessage.value = errorMessageTemplate + message;
+	};
+	const existsAnError = computed(
+		() => errorMessage.value.length > errorMessageTemplate.length
+	);
 
 	async function submitHandler() {
 		try {
@@ -27,20 +35,20 @@
 				username: inputUsername.value,
 				password: inputPassword.value,
 			};
-
-			const res = await login(credentialts);
-			const delay = async (ms) => {
-				return new Promise((resolve) => {
-					setTimeout(resolve, ms);
-				});
-			};
-			await delay(2000);
-			console.log(res);
-
+			if (!checkLocalTokenValidity()) {
+				await generateToken(credentialts);
+				router.push({ name: 'tasksList' });
+			}
 			router.push({ name: 'tasksList' });
+
+			// window.location.href = '/tasks';
+			// const { setUserState } = useAuthStore();
+			// setUserState(user);
 		} catch (error) {
 			console.error(error);
-			loginError.value = true;
+
+			//ERROR: Invalid Credentialts, try again or register.
+			setErrorMessage('Server Error');
 		}
 	}
 </script>

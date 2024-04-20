@@ -1,8 +1,7 @@
 import { createRouter, createWebHistory } from "vue-router";
+import { checkLocalTokenValidity } from "./services/axios";
 import { auth } from "./services/userService";
 import { useAuthStore } from "./stores/authStore";
-
-
 
 
 //componentes
@@ -30,25 +29,17 @@ const routes = [
     name: "tasksList",
     path: "/tasks",
     component: tasksList,
-    beforeEnter: async (to, from) => {
-      if (!(await auth()).logged) return { name: 'login' }
-    }
+
   },
   {
     name: "taskCreate",
     path: "/tasks/create",
     component: taskCreate,
-    beforeEnter: async (to, from) => {
-      if (!(await auth()).logged) return { name: 'login' }
-    }
   },
   {
     name: "taskDetail",
     path: "/tasks/:id",
     component: taskDetail,
-    beforeEnter: async (to, from) => {
-      if (!(await auth()).logged) return { name: 'login' }
-    }
   },
   {
     name: "about",
@@ -59,41 +50,26 @@ const routes = [
     name: "register",
     path: "/register",
     component: register,
-    beforeEnter: async (to, from) => {
-      if ((await auth()).logged) return { name: 'tasksList' }
-    }
   },
   {
     name: "login",
     path: "/login",
     component: login,
-    beforeEnter: async (to, from) => {
-      if ((await auth()).logged) return { name: 'tasksList' }
-    }
   },
   {
     name: "admin",
     path: "/admin",
     component: adminPage,
-    beforeEnter: async (to, from) => {
-      if (!(await auth()).admin) return { name: 'tasksList' }
-    }
   },
   {
     name: "adminDetail",
     path: "/admin/:username",
     component: userDetailAdminPage,
-    beforeEnter: async (to, from) => {
-      if (!(await auth()).admin) return { name: 'tasksList' }
-    }
   },
   {
     name: "adminTaskDetail",
     path: "/admin/:username/:id",
     component: taskDetail,
-    beforeEnter: async (to, from) => {
-      if (!(await auth()).admin) return { name: 'login' }
-    }
   },
   {
     path: "/:patchMatch(.*)*",
@@ -108,9 +84,46 @@ const router = createRouter({
 
 
 router.beforeEach(async (to, from) => {
-  const { setAuthState } = useAuthStore()
-  const authState = await auth()
-  setAuthState(authState)
+  const { setUserState } = useAuthStore();
+  if (checkLocalTokenValidity())
+  {
+    const token = localStorage.getItem('token');
+    const user = await auth(token);
+    if (user)
+    {
+      setUserState(user);
+      return userIsAuthMiddlewares(to, user);
+    }
+  }
+  setUserState(null);
+  return userNOTAuthMiddlewares(to);
 })
+
+function userIsAuthMiddlewares(to, user) {
+  switch (to.name)
+  {
+    case "register": return { name: "tasksList" };
+    case "login": return { name: "tasksList" };
+    case "admin": return user.admin ? undefined : { name: "tasksList" };
+    case "adminDetail": return user.admin ? undefined : { name: "tasksList" };
+    case "adminTaskDetail": return user.admin ? undefined : { name: "tasksList" };
+    default: return;
+  }
+}
+
+function userNOTAuthMiddlewares(to) {
+  switch (to.name)
+  {
+    case "tasksList": return { name: "login" };
+    case "taskCreate": return { name: "login" };
+    case "taskDetail": return { name: "login" };
+    case "admin": return { name: "login" };
+    case "adminDetail": return { name: "login" };
+    case "adminTaskDetail": return { name: "login" };
+
+    default: return;
+  }
+}
+
 
 export default router;

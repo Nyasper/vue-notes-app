@@ -1,42 +1,64 @@
 <template>
 	<loginForm
+		mode="register"
 		v-model:username="inputUsername"
 		v-model:password="inputPassword"
+		v-model:password2="inputPassword2"
 		button-label="Register"
-		:submit-button="buttonRegister"
+		:submit-event="actionRegister"
 	/>
-	<p id="errorMessage" v-if="registerError">
-		ERROR: Userame alredy taken, try again or
-		<router-link to="/login">login.</router-link>
-	</p>
+	<p id="errorMessage" v-if="existsAnError">{{ errorMessage }}</p>
 </template>
 
 <script setup>
-	import { ref } from 'vue';
-	import loginForm from '../components/loginForm.vue';
-	import { register, login } from '../services/userService';
+	import { ref, computed, watch } from 'vue';
+	import { register, generateToken } from '../services/userService';
 	import router from '../routes';
+	import loginForm from '../components/loginForm.vue';
 
 	const inputUsername = ref('');
 	const inputPassword = ref('');
-	const registerError = ref(false);
+	const inputPassword2 = ref('');
 
-	async function buttonRegister() {
+	//error message handler
+	const errorMessage = ref('');
+	const errorMessageTemplate = 'Error: ';
+	const setErrorMessage = (message = '') => {
+		errorMessage.value = errorMessageTemplate + message;
+	};
+	const existsAnError = computed(
+		() => errorMessage.value.length > errorMessageTemplate.length
+	);
+
+	async function actionRegister() {
 		try {
 			const credentialts = {
 				username: inputUsername.value,
 				password: inputPassword.value,
+				password2: inputPassword2.value,
 			};
-			const { status: registerStatus } = await register(credentialts);
-			if (registerStatus === 201) {
-				const { status: loginStatus } = await login(credentialts);
-				if (loginStatus === 200) router.push({ name: 'tasksList' });
-			} else throw new Error('ERROR on register');
+			if (credentialts.password !== credentialts.password2) {
+				setErrorMessage("passwords doesn't match, please verify.");
+			}
+			await register(credentialts);
+			await generateToken(credentialts);
+			router.push({ name: 'tasksList' });
 		} catch (error) {
-			console.error(error);
-			registerError.value = true;
+			const errorCodeNumber = error.response.status;
+			if (errorCodeNumber === 409) {
+				setErrorMessage(`userame alredy taken, try again or
+				login.`);
+			}
+			console.error('Error on Register:', error);
+			setErrorMessage('server Error.');
 		}
 	}
+	//delete error message after 10s
+	watch(errorMessage, (e) => {
+		setInterval(() => {
+			errorMessage.value = '';
+		}, 10000);
+	});
 </script>
 
 <style scoped>

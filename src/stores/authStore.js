@@ -6,14 +6,14 @@ import { ref } from 'vue'
 
 export const useAuthStore = defineStore("auth", () => {
 
-  const authState = ref(null)
+  const userState = ref(null);
 
-  function setAuthState(paramValue) {
-    authState.value = paramValue;
+  function setUserState(paramValue) {
+    userState.value = paramValue;
   }
 
   return {
-    authState,
-    setAuthState
+    userState,
+    setUserState
   }
 })

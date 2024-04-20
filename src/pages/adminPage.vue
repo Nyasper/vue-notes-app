@@ -20,7 +20,10 @@
 			</div>
 			<div class="column">
 				<h4>View Tasks</h4>
-				<router-link v-for="user in users" :to="`/admin/${user.username}`"
+				<!-- `/admin/${user.username}` -->
+				<router-link
+					v-for="user in users"
+					:to="{ name: 'adminDetail', params: { username: user.username } }"
 					>{{ user.username }} tasks</router-link
 				>
 			</div>
@@ -42,7 +45,6 @@
 </template>
 
 <script setup>
-	// :to="{ name: 'adminDetail', params: { id: user.id } }"
 	import { ref, onMounted } from 'vue';
 	import { getAllUsers, deleteUserById } from '../services/adminService';
 

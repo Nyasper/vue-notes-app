@@ -9,17 +9,28 @@
 			id="password"
 			v-model.trim="password"
 		/>
+		<label v-if="mode === 'register'" for="password2" style="text-align: center"
+			>Repeat Password</label
+		>
+		<input
+			v-if="mode === 'register'"
+			type="password"
+			name="password2"
+			id="password2"
+			v-model.trim="password2"
+		/>
 		<button type="submit" id="submitButton">
-			{{ $props.buttonLabel }}
+			{{ mode }}
 		</button>
 	</form>
 </template>
 
 <script setup>
-	defineProps(['buttonLabel', 'submitEvent']);
+	defineProps(['mode', 'submitEvent']);
 
 	const username = defineModel('username');
 	const password = defineModel('password');
+	const password2 = defineModel('password2');
 </script>
 
 <style scoped>
@@ -33,10 +44,12 @@
 	#username {
 		margin: 10px auto;
 		width: 30%;
+		margin-bottom: 35px;
 	}
 
-	#password {
-		margin: 10px auto;
+	#password,
+	#password2 {
+		margin: 15px auto;
 		width: 30%;
 	}
 
