@@ -1,11 +1,12 @@
-<script setup>
-	defineProps(['taskTitle', 'taskDescription']);
+<script setup lang="ts">
+	import type { Task } from '../models/task';
+	const { title, description } = defineProps<Task>();
 </script>
 
 <template>
 	<div id="taskComponentContainer">
-		<h2 id="taskTitle">{{ taskTitle }}</h2>
-		<p id="taskDescription">{{ taskDescription }}</p>
+		<h2 id="taskTitle">{{ title }}</h2>
+		<p id="taskDescription">{{ description }}</p>
 	</div>
 </template>
 

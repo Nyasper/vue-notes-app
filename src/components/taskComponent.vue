@@ -2,12 +2,20 @@
 	<li class="task">
 		<h2>{{ title }}</h2>
 		<p>{{ description }}</p>
-		<span v-if="created" id="created">{{ created }}</span>
+		<span v-if="createdAt" id="created">{{ createdAt }}</span>
 	</li>
 </template>
 
-<script setup>
-	const props = defineProps(['title', 'description', 'created']);
+<script setup lang="ts">
+	import type { Task } from '../models/task';
+
+	const { title, description, createdAt } = defineProps<Props>();
+
+	interface Props {
+		title: string;
+		description: string;
+		createdAt: string;
+	}
 </script>
 
 <style scoped>

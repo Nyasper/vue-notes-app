@@ -25,8 +25,8 @@
 
 <script setup>
 	import { ref } from 'vue';
-	import { createTask } from '../services/taskService.js';
-	import router from '../routes.js';
+	import { createTask } from '../services/taskService';
+	import router from '../routes';
 	import singleTaskComponent from '../components/singleTaskComponent.vue';
 
 	const title = ref('');
