@@ -1,8 +1,8 @@
 import axios from "axios";
 
 
-// const host = 'http://localhost:3000' //localUrl;
-const host = 'https://proyecto-1-backend-iota.vercel.app' //cloudUrl
+const host = 'http://localhost:3000' //localUrl;
+// const host = 'https://proyecto-1-backend-iota.vercel.app' //cloudUrl
 
 
 export function checkLocalTokenValidity() {
