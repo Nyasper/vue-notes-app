@@ -45,12 +45,14 @@
 			</li>
 		</ul>
 	</nav>
+	<h2>Loading State: {{ LoadingStore.loading }}</h2>
 </template>
 
 <script setup>
 	import { useAuthStore } from '../stores/authStore';
 	import { storeToRefs } from 'pinia';
 	import { logout } from '../services/userService';
+	import { LoadingStore } from '@/stores/loadingStore';
 
 	const store = useAuthStore();
 	const { userState } = storeToRefs(store);

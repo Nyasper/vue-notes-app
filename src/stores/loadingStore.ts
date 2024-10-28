@@ -13,4 +13,4 @@ function useLoadingStore() {
 	};
 }
 
-export const LoadingHandler = useLoadingStore();
+export const LoadingStore = useLoadingStore();

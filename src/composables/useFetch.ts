@@ -1,6 +1,7 @@
 import { reactive, ref, computed, readonly } from 'vue';
 import { getAllTasks } from '../services/taskService';
-import type { Task, TaskWithoutId } from '../models/task';
+import { LoadingStore } from '@/stores/loadingStore';
+import type { TaskWithoutId } from '../models/task';
 
 export function useFetch(url: string) {
 	const error = ref('');
@@ -8,6 +9,7 @@ export function useFetch(url: string) {
 
 	async function getData() {
 		try {
+			LoadingStore.startLoading();
 			const tasks = await getAllTasks();
 			tasks.forEach(({ id, ...task }) => data.set(id, task));
 			// data.splice(0, data.length, ...tasks); // => delete all elements from the array and then insert the new ones.
@@ -21,12 +23,11 @@ export function useFetch(url: string) {
 			if (e instanceof Error) {
 				error.value = e.message;
 			}
+		} finally {
+			LoadingStore.stopLoading();
 		}
 	}
-
 	getData();
 
-	const computado = computed(() => data.size);
-
-	return { data: readonly(data), error: readonly(error), computado };
+	return { data: readonly(data), error: readonly(error) };
 }

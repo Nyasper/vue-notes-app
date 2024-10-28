@@ -2,23 +2,12 @@
 	import taskComponent from '../components/taskComponent.vue';
 	import router from '../routes';
 	import { useFetch } from '../composables/useFetch';
-	import { watch, watchEffect } from 'vue';
-	// const tasks = ref<Task[]>([]);
-	// const loading = ref(false);
-	// const errorMessage = ref<string>('');
+	import { watch } from 'vue';
+	import { TaskStore } from '@/stores/TaskStore';
+	import { LoadingStore } from '@/stores/loadingStore';
 
-	const { data: tasks, error, computado } = useFetch('');
-
-	// onMounted(async () => {
-	// 	loading.value = true;
-	// 	try {
-	// tasks.value = await getAllTasks();
-	// 	} catch (error) {
-	// 		if (error instanceof Error) {
-	// 			errorMessage.value = error.message;
-	// 		}
-	// 	}
-	// });
+	const { tasks, error } = TaskStore;
+	const { loading } = LoadingStore;
 
 	function obtainDate(date?: string) {
 		if (!date) return '';
@@ -38,9 +27,10 @@
 </script>
 
 <template>
-	<h1>All Notes {{ computado }}</h1>
 	<!-- <h1 v-if="tasks.loading">Loading...</h1> -->
-	<h2 v-if="tasks.size === 0" class="createMessage">
+	<h2 v-if="error" class="createMessage">Error: {{ error }}</h2>
+	<h2 v-if="loading">Loading...</h2>
+	<h2 v-if="!loading && tasks.size === 0" class="createMessage">
 		There are no tasks created, start by
 		<router-link :to="{ name: 'taskCreate' }">creating one</router-link>
 	</h2>
