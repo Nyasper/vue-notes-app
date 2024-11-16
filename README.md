@@ -25,16 +25,18 @@ Main Features of the Application:
 # SCREENSHOTS
 
 Page Home (All notes)  
-![all-notes](/Screenshots/notes.png)
+![all-notes](/Screenshots/all_notes.jpeg)
 
 Create a Note  
-![create-note](/Screenshots/createNote.png)
+![create-note](/Screenshots/create_note.jpeg)
 
 Update and Delete a Note  
-![update-delete-notes](/Screenshots/editNote.png)
+![update-delete-notes](/Screenshots/update_note.jpeg)
 
-Login / Register page  
-![page-about](/Screenshots/registerLogin.png)
+Register page  
+![page-about](/Screenshots/page_register.jpeg)
 
 Page About  
-![page-about](/Screenshots/about.png)
+![page-about](/Screenshots/page_about.jpeg)
+
+### [The backend repo used on this application:]("https://github.com/Nyasper/notes_app_hono_bun")
