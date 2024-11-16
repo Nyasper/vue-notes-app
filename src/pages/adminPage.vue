@@ -4,7 +4,7 @@
 
 <script setup lang="ts">
 	import { AdminStore } from '@/stores/adminStore';
-	import AdminTable from '@/components/AdminTable.vue';
+	import AdminTable from '@/components/adminTable.vue';
 
 	const { adminData } = AdminStore;
 

@@ -21,7 +21,7 @@
 <script setup lang="ts">
 	import { AuthStore } from '@/stores/authStore';
 	import { NotesStore } from '@/stores/notesStore';
-	import NotesList from '@/components/NotesList.vue';
+	import NotesList from '@/components/notesList.vue';
 
 	const { notes, error, loading } = NotesStore;
 	const { user } = AuthStore;

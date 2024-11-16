@@ -6,59 +6,59 @@ const routes: RouteRecordRaw[] = [
 	{
 		name: 'about',
 		path: '/about',
-		component: () => import('./pages/About.vue'),
+		component: () => import('./pages/about.vue'),
 	},
 	{
 		name: 'register',
 		path: '/register',
-		component: () => import('./pages/Register.vue'),
+		component: () => import('./pages/register.vue'),
 		meta: { requireAuth: false },
 	},
 	{
 		name: 'login',
 		path: '/login',
-		component: () => import('./pages/Login.vue'),
+		component: () => import('./pages/login.vue'),
 		meta: { requireAuth: false },
 	},
 	{
 		name: 'notesList',
 		path: '/notes',
-		component: () => import('./pages/AllNotes.vue'),
+		component: () => import('./pages/allNotes.vue'),
 		meta: { requireAuth: true },
 	},
 	{
 		name: 'noteCreate',
 		path: '/notes/create',
-		component: () => import('./pages/NoteCreate.vue'),
+		component: () => import('./pages/noteCreate.vue'),
 		meta: { requireAuth: true },
 	},
 	{
 		name: 'noteDetail',
 		path: '/notes/:key',
-		component: () => import('./pages/NoteDetail.vue'),
+		component: () => import('./pages/noteDetail.vue'),
 		meta: { requireAuth: true },
 	},
 	{
 		name: 'admin',
 		path: '/admin',
-		component: () => import('./pages/AdminPage.vue'),
+		component: () => import('./pages/adminPage.vue'),
 		meta: { requireAuth: true, requireAdmin: true },
 	},
 	{
 		name: 'adminNotesList',
 		path: '/admin/:userId',
-		component: () => import('./pages/AdminNotesList.vue'),
+		component: () => import('./pages/adminNotesList.vue'),
 		meta: { requireAuth: true, requireAdmin: true },
 	},
 	{
 		name: 'adminNoteDetail',
 		path: '/admin/:userId/:key',
-		component: () => import('./pages/NoteDetail.vue'),
+		component: () => import('./pages/noteDetail.vue'),
 		meta: { requireAuth: true, requireAdmin: true },
 	},
 	{
 		path: '/:pathMatch(.*)*', // => 404 not found
-		component: () => import('./pages/Notfound.vue'),
+		component: () => import('./pages/notFound.vue'),
 	},
 ];
 
