@@ -1,8 +1,7 @@
 import { readonly, ref } from 'vue';
 
-function useLoadingStore() {
+export function useLoadingStore() {
 	const loading = ref(false);
-
 	const startLoading = () => (loading.value = true);
 	const stopLoading = () => (loading.value = false);
 
@@ -13,4 +12,4 @@ function useLoadingStore() {
 	};
 }
 
-export const LoadingStore = useLoadingStore();
+// export const LoadingRouteStore = useLoadingStore(); //global state

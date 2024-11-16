@@ -1,21 +1,46 @@
-import { axiosInstance } from './axios';
+import type { UserAdminDataWithId } from '@/models/adminData.model';
+import {
+	adminUsersBase,
+	errorServerDoesntRespond,
+	fetchClient,
+} from './fetchClient';
+import type { ResponseWithData, ResponseWithMessage } from './response.type';
 
-export async function getAllUsers() {
+export async function getUsers(): Promise<
+	ResponseWithData<UserAdminDataWithId[]>
+> {
 	try {
-		return await axiosInstance.get('admin/user/all');
+		const data = await fetchClient<ResponseWithData<UserAdminDataWithId[]>>(
+			adminUsersBase('/all')
+		);
+		return data;
 	} catch (error) {
-		console.error('Error on obtain all users', error);
+		return errorServerDoesntRespond(error);
 	}
 }
 
-export async function deleteUserById(userId) {
+export async function getUser(
+	id: string
+): Promise<ResponseWithData<UserAdminDataWithId>> {
 	try {
-		return await axiosInstance.delete(`admin/user/${userId}`);
+		const data = await fetchClient<ResponseWithData<UserAdminDataWithId>>(
+			adminUsersBase(`/${id}`)
+		);
+		return data;
 	} catch (error) {
-		console.error('Error on delete user ById', error);
+		return errorServerDoesntRespond(error);
 	}
 }
 
-export async function getAllUsersTasksAdmin(username) {
-	return await axiosInstance.get(`admin/user/${username}`);
+export async function deleteUser(id: string): Promise<ResponseWithMessage> {
+	try {
+		const data = await fetchClient<ResponseWithMessage>(
+			adminUsersBase(`/${id}`),
+			'DELETE'
+		);
+
+		return data;
+	} catch (error) {
+		return errorServerDoesntRespond(error);
+	}
 }

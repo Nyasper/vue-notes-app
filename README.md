@@ -1,21 +1,26 @@
-# Español
+# About this application
 
-Este es mi primer proyecto, es una aplicación para crear, editar,
-actualizar y eliminar(CRUD) notas que tienen un titulo y una
-descripcion. Incorpora un sistema de inicio de sesión para facilitar la
-gestión de notas asociadas a usuarios registrados. Las tecnologías que
-utilicé para realizar este proyecto fueron VUE JS para desarrollar toda
-la interfaz, y para las peticiones a la API de mi backend utilize la
-librería 'Axios'.
+## Español
 
-# English
+En esta aplicación puedes crear una cuenta e iniciar sesión para crear, editar, actualizar y eliminar notas (CRUD) que tengan un "título" y una "descripción".
 
-This is my first project, it is an application to create, edit, update
-and delete(CRUD) notes that have a title and a description. Incorporates
-a login system to facilitate note management associated with registered
-users. The technologies I used to carry out this project were VUE JS to
-develop the entire interface, and for requests to my API backend uses
-the 'Axios' library.
+Este proyecto se creó con Vue.js para el frontend, Hono.js con Cloudflare Workers para el backend y Turso para la base de datos.
+
+Características principales de la aplicación:
+
+- Registrarse e iniciar sesión
+- Ver, crear, editar y eliminar las notas asociadas a su usuario
+
+## English
+
+In this application you can create an account and log in to create, edit, update, and delete (CRUD) notes that have a "title" and a "description".
+
+This project was created with Vue.js for the frontend, Hono.js with Cloudflare Workers for the backend, and Turso for the database.
+
+Main Features of the Application:
+
+- Register and login.
+- View, create, edit, and delete notes associated with your user.
 
 # SCREENSHOTS
 

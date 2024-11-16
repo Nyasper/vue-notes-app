@@ -1,76 +1,64 @@
 import { createRouter, createWebHistory } from 'vue-router';
-import { checkLocalTokenValidity } from './services/axios';
-import { auth } from './services/userService';
-import { useAuthStore } from './stores/authStore';
+import type { RouteRecordRaw } from 'vue-router';
+import { AuthStore } from './stores/AuthStore';
 
-//componentes
-import about from './pages/about.vue';
-import notFound from './components/notfound.vue';
-
-//Pages
-import homePage from './pages/home.vue';
-import register from './pages/register.vue';
-import login from './pages/login.vue';
-import tasksList from './pages/allTasks.vue';
-import taskDetail from './pages/taskDetail.vue';
-import taskCreate from './pages/taskCreate.vue';
-import adminPage from './pages/adminPage.vue';
-import userDetailAdminPage from './pages/userDetailAdminPage.vue';
-
-const routes = [
-	{
-		name: 'home',
-		path: '/',
-		component: homePage,
-	},
-	{
-		name: 'tasksList',
-		path: '/tasks',
-		component: tasksList,
-	},
-	{
-		name: 'taskCreate',
-		path: '/tasks/create',
-		component: taskCreate,
-	},
-	{
-		name: 'taskDetail',
-		path: '/tasks/:id',
-		component: taskDetail,
-	},
+const routes: RouteRecordRaw[] = [
 	{
 		name: 'about',
 		path: '/about',
-		component: about,
+		component: () => import('./pages/About.vue'),
 	},
 	{
 		name: 'register',
 		path: '/register',
-		component: register,
+		component: () => import('./pages/Register.vue'),
+		meta: { requireAuth: false },
 	},
 	{
 		name: 'login',
 		path: '/login',
-		component: login,
+		component: () => import('./pages/Login.vue'),
+		meta: { requireAuth: false },
+	},
+	{
+		name: 'notesList',
+		path: '/notes',
+		component: () => import('./pages/AllNotes.vue'),
+		meta: { requireAuth: true },
+	},
+	{
+		name: 'noteCreate',
+		path: '/notes/create',
+		component: () => import('./pages/NoteCreate.vue'),
+		meta: { requireAuth: true },
+	},
+	{
+		name: 'noteDetail',
+		path: '/notes/:key',
+		component: () => import('./pages/NoteDetail.vue'),
+		meta: { requireAuth: true },
 	},
 	{
 		name: 'admin',
 		path: '/admin',
-		component: adminPage,
+		component: () => import('./pages/AdminPage.vue'),
+		meta: { requireAuth: true, requireAdmin: true },
 	},
 	{
-		name: 'adminDetail',
-		path: '/admin/:username',
-		component: userDetailAdminPage,
+		name: 'adminNotesList',
+		path: '/admin/:userId',
+		component: () => import('./pages/AdminNotesList.vue'),
+		meta: { requireAuth: true, requireAdmin: true },
 	},
 	{
-		name: 'adminTaskDetail',
-		path: '/admin/:username/:id',
-		component: taskDetail,
+		name: 'adminNoteDetail',
+		path: '/admin/:userId/:key',
+		component: () => import('./pages/NoteDetail.vue'),
+		meta: { requireAuth: true, requireAdmin: true },
 	},
 	{
-		path: '/:patchMatch(.*)*',
-		component: notFound,
+		path: '/:pathMatch(.*)*', // => 404 not found
+		component: () => import('./pages/Notfound.vue'),
 	},
 ];
 
@@ -79,55 +67,33 @@ const router = createRouter({
 	routes,
 });
 
-router.beforeEach(async (to, from) => {
-	const { setUserState } = useAuthStore();
-	if (checkLocalTokenValidity()) {
-		const token = localStorage.getItem('token');
-		const user = await auth(token);
-		if (user) {
-			setUserState(user);
-			return userIsAuthMiddlewares(to, user);
-		}
-	}
-	setUserState(null);
-	return userNOTAuthMiddlewares(to);
-});
+// router.beforeEach(async (to) => {
+// 	// require auth
+// 	if (to.meta.requireAuth && !AuthStore.isAuth.value) {
+// 		return { name: 'login', query: { redirect: to.fullPath } };
+// 	}
 
-function userIsAuthMiddlewares(to: any, user: any) {
-	switch (to.name) {
-		case 'register':
-			return { name: 'tasksList' };
-		case 'login':
-			return { name: 'tasksList' };
-		case 'admin':
-			return user.admin ? undefined : { name: 'tasksList' };
-		case 'adminDetail':
-			return user.admin ? undefined : { name: 'tasksList' };
-		case 'adminTaskDetail':
-			return user.admin ? undefined : { name: 'tasksList' };
-		default:
-			return;
-	}
-}
+// 	// require admin
+// 	if (to.meta.requireAdmin) {
+// 		if (!AuthStore.isAdmin.value) {
+// 			// Si el usuario está autenticado pero no es administrador
+// 			if (AuthStore.isAuth.value) {
+// 				return { name: 'notesList', query: { redirect: to.fullPath } };
+// 			}
+// 			// Si no está autenticado (esto ya se verificó antes, pero se incluye por claridad)
+// 			return { name: 'login', query: { redirect: to.fullPath } };
+// 		}
+// 	}
 
-function userNOTAuthMiddlewares(to: any) {
-	switch (to.name) {
-		case 'tasksList':
-			return { name: 'login' };
-		case 'taskCreate':
-			return { name: 'login' };
-		case 'taskDetail':
-			return { name: 'login' };
-		case 'admin':
-			return { name: 'login' };
-		case 'adminDetail':
-			return { name: 'login' };
-		case 'adminTaskDetail':
-			return { name: 'login' };
-
-		default:
-			return;
-	}
-}
+// 	// if (!to.meta.requireAuth && AuthStore.isAuth)
+// 	// 	return { name: 'notesList', query: { redirect: to.fullPath } };
+// });
 
 export default router;
+
+declare module 'vue-router' {
+	interface RouteMeta {
+		requireAuth: boolean;
+		requireAdmin?: boolean;
+	}
+}

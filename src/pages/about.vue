@@ -1,15 +1,6 @@
-<script setup>
-  import { ref } from 'vue'
-  const en = ref(true)
-
-  const switchLanguage = ()=> en.value = !en.value
-
-</script>
-
 <template>
-  <!-- ENGLISH -->
-	<div  v-if="en" id="aboutContainer">
-		<div id="imgContainer">
+	<div id="aboutContainer">
+		<div class="imgContainer">
 			<a
 				href="https://github.com/Nyasper/Proyecto-1---app-Notas"
 				target="_blank"
@@ -17,142 +8,224 @@
 				<img src="/github.svg" alt="svg-icon" id="svgIcon" />
 				<p>GITHUB</p>
 			</a>
-      <button @click="switchLanguage">Cambiar a Español</button>
+			<button @click="switchLang" id="changeLangButton">
+				{{ content.buttonSwitchLanguage[currentLang] }}
+			</button>
 		</div>
-		<div id="textContainer">
-			<h1>About</h1>
-			<p class="aboutText">
-				This is my first project, it is an application to create, edit, update
-				and delete(CRUD) notes that have a title and a description. Incorporates
-				a login system to facilitate note management associated with registered
-				users. The technologies I used to carry out this project were VUE JS to
-				develop the entire interface, and for requests to my API backend uses
-				the 'Axios' library.
-        <h3>Main Features of the Application:</h3>
-          <ul>
-           <li>
-             Register and Login.
-           </li>
-           <li>
-             View, Create, Edit, and Delete Notes associated with your user.
-           </li>
-         </ul>
+
+		<div class="textContainer">
+			<h1>{{ content.h1[currentLang] }}</h1>
+			<p>
+				{{ content.p1[currentLang] }}
 			</p>
-		</div>
-	</div>
-<!-- SPANISH -->
-  <div v-else id="aboutContainer">
-		<div id="imgContainer">
-			<a
-				href="https://github.com/Nyasper/Proyecto-1---app-Notas"
-				target="_blank"
-			>
-				<img src="/github.svg" alt="svg-icon" id="svgIcon" />
-				<p>GITHUB</p>
-			</a>
-      <button @click="switchLanguage" >Switch to English</button>
-		</div>
-		<div id="textContainer">
-			<h1>About</h1>
-			<p class="aboutText">
-				Este es mi primer proyecto, es una aplicación para crear, editar,
-				actualizar y eliminar(CRUD) notas que tienen un titulo y una
-				descripcion. Incorpora un sistema de inicio de sesión para facilitar la
-				gestión de notas asociadas a usuarios registrados. Las tecnologías que
-				utilicé para realizar este proyecto fueron VUE JS para desarrollar toda
-				la interfaz, y para las peticiones a la API de mi backend utilize la
-				librería 'Axios'.
-        <h3>Caracteristicas Principales de la Aplicacion:</h3>
-				<ul>
-          <li>
-            Registrarse e Iniciar Sesion.
-          </li>
-          <li>
-            Ver, Crear, Editar, y Eliminar las Notas asociadas a su usuario.
-          </li>
-        </ul>
+			<p>
+				{{ content.p2[currentLang] }}
 			</p>
+
+			<h2>{{ content.h2[currentLang] }}</h2>
+			<ul>
+				<li v-for="(item, i) in content.ul.li" :key="i">
+					{{ item[currentLang] }}
+				</li>
+			</ul>
 		</div>
 	</div>
 </template>
 
+<script setup lang="ts">
+	import { computed, ref } from 'vue';
+
+	const content = {
+		buttonSwitchLanguage: {
+			en: 'Switch to English',
+			es: 'Cambiar a español',
+		},
+		h1: {
+			en: 'About',
+			es: 'Acerca de',
+		},
+		p1: {
+			en: 'In this application you can create an account and log in to create, edit, update, and delete (CRUD) notes that have a "title" and a "description".',
+			es: 'En esta aplicación puedes crear una cuenta e iniciar sesión para crear, editar, actualizar y eliminar notas (CRUD) que tengan un "título" y una "descripción".',
+		},
+		p2: {
+			en: 'This project was created with Vue.js for the frontend, Hono.js with Cloudflare Workers for the backend, and Turso for the database.',
+			es: 'Este proyecto se creó con Vue.js para el frontend, Hono.js con Cloudflare Workers para el backend y Turso para la base de datos.',
+		},
+		h2: {
+			en: 'Main Features of the Application:',
+			es: 'Características principales de la aplicación:',
+		},
+		ul: {
+			li: [
+				{ en: 'Register and login.', es: 'Registrarse e iniciar sesión.' },
+				{
+					en: 'View, create, edit, and delete notes associated with your user.',
+					es: 'Ver, crear, editar y eliminar las notas asociadas a su usuario.',
+				},
+			],
+		},
+	};
+
+	const currentLang = ref<Lang>('en');
+	const switchLang = () => {
+		currentLang.value = currentLang.value !== 'en' ? 'en' : 'es';
+	};
+	type Lang = 'en' | 'es';
+</script>
+
 <style scoped>
-	h1 {
-		font-size: 4.6em;
-	}
-
-  h3{
-    margin: 10px 0;
-  }
-
-  li{
-    margin: 5px 0;
-    list-style: disc;
-  }
-
-  button{
-    display: block;
-    margin: 10px auto;
-  }
-
 	#aboutContainer {
+		width: 80%;
 		display: flex;
 		flex-direction: row;
 		align-items: center;
-		justify-content: center;
+		justify-content: space-between;
 		background-color: rgb(27, 27, 27);
 		padding: 10px;
+		gap: 30px;
 	}
 
-	#imgContainer {
-		width: 30%;
+	.imgContainer {
+		a {
+			display: flex;
+			flex-direction: column;
+			align-items: center;
+			justify-content: center;
+			font-size: 1.1em;
+			margin: 0 auto;
+		}
+
+		#svgIcon {
+			height: 120px;
+			background-color: rgb(46, 46, 46);
+			padding: 10px;
+			border-radius: 10px;
+
+			&:hover {
+				background-color: rgb(19, 19, 19);
+			}
+		}
+
+		#changeLangButton {
+			font-size: 1em;
+			display: block;
+			padding: 15px;
+			margin: 10px auto;
+		}
 	}
 
-	#imgContainer > a {
+	.textContainer {
 		display: flex;
 		flex-direction: column;
-		align-items: center;
-		justify-content: center;
-		font-size: 1.1em;
-		gap: 10px;
-		width: max-content;
-		margin: 0 auto;
+
+		h1 {
+			font-size: 3em;
+			margin: 0;
+			margin-bottom: 30px;
+		}
+
+		p {
+			font-size: 1.1em;
+			line-height: 1em;
+			margin: 0;
+			padding: 0;
+		}
+
+		p:not(:first-of-type) {
+			/* aplies this styles to all p exept the first */
+			margin-top: 10px;
+		}
+
+		h2 {
+			margin: 0;
+			margin-top: 30px;
+			font-size: 2.1em;
+			text-align: center;
+		}
+
+		ul {
+			margin: 0;
+			padding: 0;
+
+			li {
+				margin: 5px 0;
+				padding: 0;
+				list-style: disc;
+				font-size: 21px;
+			}
+		}
 	}
 
-	#svgIcon {
-		height: 200px;
-		width: auto;
-		background-color: rgb(46, 46, 46);
-		padding: 20px;
-		border-radius: 10px;
-	}
+	@media only screen and (max-width: 768px) {
+		#aboutContainer {
+			flex-direction: column-reverse;
+			width: 90%;
+			margin: 0 auto;
+		}
 
-	#svgIcon:hover {
-		background-color: rgb(19, 19, 19);
-	}
+		.textContainer {
+			margin: 0 auto;
+			margin-bottom: 30px;
+			width: 100%;
+			padding: 0;
 
-	#textContainer {
-		display: flex;
-		flex-direction: column;
-		align-items: center;
-		justify-content: center;
-		width: 60%;
-		margin: 5px 20px;
-	}
+			h1 {
+				font-size: 2.6em;
+				margin: 0;
+				margin-bottom: 30px;
+			}
 
-	#aboutContainer > a > p {
-		text-align: center;
-		font-size: 1.6em;
-		margin-top: 5px;
-	}
+			p {
+				font-size: 1.3em;
+				line-height: 1.2em;
+				margin: 0;
+				padding: 0;
+			}
+			p:not(:first-of-type) {
+				/* aplies this styles to all p exept the first */
+				margin-top: 10px;
+			}
 
-	#aboutContainer h2 {
-		font-size: 2.8em;
-		margin: 30px 10px;
-	}
+			h2 {
+				font-size: 1.8em;
+				margin: 0;
+				margin-top: 35px;
+			}
 
-	.aboutText {
-		margin: 30px 10px;
-		font-size: 1.2em;
+			ul {
+				margin: 0;
+				margin-top: 10px;
+				margin-left: 20px;
+
+				li {
+					margin: 5px 0;
+					padding: 0;
+					list-style: disc;
+					font-size: 21px;
+				}
+			}
+		}
+
+		.imgContainer {
+			width: 100%;
+			display: flex;
+			flex-direction: column-reverse;
+			gap: 0;
+
+			a {
+				font-size: 1em;
+			}
+
+			#svgIcon {
+				height: 50px;
+			}
+
+			#changeLangButton {
+				display: block;
+				margin: 0 auto;
+				margin-bottom: 30px;
+			}
+		}
 	}
 </style>

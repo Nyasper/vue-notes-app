@@ -2,9 +2,22 @@
 	<div id="NotFoundcontainer">
 		<h2>404 NOT FOUND</h2>
 		<img src="/Hare_chibi.webp" alt="harePic" />
-		<p>Website not available</p>
+		<p>redirecting...</p>
 	</div>
 </template>
+
+<script setup>
+	import { onMounted, onUnmounted } from 'vue';
+	import router from '@/routes';
+	let timeoutId;
+	onMounted(() => {
+		timeoutId = setTimeout(() => {
+			router.push('/tasks');
+		}, 3000);
+	});
+
+	onUnmounted(() => clearInterval(timeoutId));
+</script>
 
 <style scoped>
 	#NotFoundcontainer {

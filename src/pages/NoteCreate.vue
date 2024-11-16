@@ -6,7 +6,7 @@
 			<input
 				type="text"
 				placeholder="Add a Title"
-				v-model.trim="title"
+				v-model="title"
 				id="input-title"
 				required
 				maxlength="60"
@@ -14,36 +14,33 @@
 			<textarea
 				id="input-description"
 				placeholder="Add a Description"
-				v-model.trim="description"
+				v-model="description"
 				required
 			></textarea>
 			<button id="saveButton" :disabled="title.length === 0">Save</button>
 		</form>
-		<singleTaskComponent :task-title="title" :task-description="description" />
+		<NotePreview :title :description />
 	</div>
 </template>
 
-<script setup>
+<script setup lang="ts">
 	import { ref } from 'vue';
-	import { createTask } from '../services/taskService';
+	import { NotesStore } from '@/stores/NotesStore';
+	import NotePreview from '../components/NotePreview.vue';
 	import router from '../routes';
-	import singleTaskComponent from '../components/singleTaskComponent.vue';
 
 	const title = ref('');
 	const description = ref('');
 
 	async function saveTask() {
-		try {
-			const task = {
-				title: title.value,
-				description: description.value,
-			};
-			const response = await createTask(task);
-			if (response.status === 201) router.push('/tasks');
-			else throw new Error('ERROR on create a task');
-		} catch (error) {
-			console.error(error);
-		}
+		const taskToInsert = {
+			title: title.value,
+			description: description.value,
+		};
+
+		const newNote = await NotesStore.createNote(taskToInsert);
+		console.info('note created:', newNote);
+		router.push({ name: 'notesList' });
 	}
 </script>
 
@@ -52,9 +49,8 @@
 		display: flex;
 		flex-direction: row;
 		flex-wrap: wrap;
-		height: 80vh;
+		height: auto;
 		width: 100%;
-		gap: 10px;
 	}
 
 	#taskForm {
@@ -147,5 +143,24 @@
 	#titleCounter {
 		font-size: 1.2em;
 		font-weight: bold;
+	}
+
+	@media only screen and (max-width: 768px) {
+		#taskForm {
+			width: 100%;
+			align-items: center;
+			justify-content: center;
+
+			#input-title {
+				height: 30px;
+				margin: 0;
+				width: 80%;
+			}
+			#input-description {
+				margin: 10px 0;
+				width: 80%;
+				height: 400px;
+			}
+		}
 	}
 </style>

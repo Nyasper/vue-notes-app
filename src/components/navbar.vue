@@ -1,119 +1,164 @@
 <template>
-	<nav>
-		<ul id="navContainer">
-			<li>
-				<router-link class="anchorItem" :to="{ name: 'home' }">
-					Home
-				</router-link>
-			</li>
-			<li v-if="userState?.id && userState?.username">
-				<router-link class="anchorItem" :to="{ name: 'tasksList' }">
-					My Notes
-				</router-link>
-			</li>
-			<li v-if="userState?.id && userState?.username">
-				<router-link class="anchorItem" :to="{ name: 'taskCreate' }">
-					Create Note
-				</router-link>
-			</li>
-			<li v-if="!userState">
-				<router-link class="anchorItem" :to="{ name: 'login' }">
-					Login
-				</router-link>
-			</li>
-			<li v-if="!userState">
-				<router-link class="anchorItem" :to="{ name: 'register' }">
-					Register
-				</router-link>
-			</li>
-			<li v-if="userState?.id && userState?.username && userState?.admin">
-				<router-link class="anchorItem" :to="{ name: 'admin' }">
-					Admin
+	<nav class="bottomMargin">
+		<button
+			type="button"
+			ref="navShowButtonRef"
+			id="hamburgerButton"
+			@click="openPanel"
+			:aria-expanded="sidePanelOpen ? 'true' : 'false'"
+			aria-controls="sidePanel"
+		>
+			<img
+				src="/hamburgerIcon.svg"
+				alt="Open nav menu"
+				id="hamburgerIcon"
+				:class="sidePanelOpen && 'sidePanelOpened'"
+			/>
+		</button>
+		<ul
+			class="navContainer"
+			:class="sidePanelOpen && 'menuOpen'"
+			ref="subMenuRef"
+		>
+			<li
+				v-for="navItem in filteredNavBarItems"
+				:class="{ hiddenElement: !sidePanelOpen }"
+			>
+				<router-link class="anchorItem" :to="{ name: navItem.routeName }">
+					{{ navItem.innerText }}
 				</router-link>
 			</li>
 			<li
-				v-if="userState?.id && userState?.username"
-				@click="logoutButton"
+				v-if="AuthStore.isAuth"
 				class="logoutButton"
+				:class="{ hiddenElement: !sidePanelOpen }"
 			>
-				<p class="anchorItem">Logout</p>
-			</li>
-			<li>
-				<router-link :to="{ name: 'about' }" class="anchorItem">
-					About
-				</router-link>
+				<p class="anchorItem" @click="logoutButton">Logout</p>
 			</li>
 		</ul>
 	</nav>
-	<h2>Loading State: {{ LoadingStore.loading }}</h2>
 </template>
 
-<script setup>
-	import { useAuthStore } from '../stores/authStore';
-	import { storeToRefs } from 'pinia';
-	import { logout } from '../services/userService';
-	import { LoadingStore } from '@/stores/loadingStore';
-
-	const store = useAuthStore();
-	const { userState } = storeToRefs(store);
+<script setup lang="ts">
+	import { AuthStore } from '@/stores/AuthStore';
 	import router from '../routes';
+	import {
+		computed,
+		onBeforeUnmount,
+		onMounted,
+		onUnmounted,
+		ref,
+		useTemplateRef,
+		type ComputedRef,
+	} from 'vue';
 
 	async function logoutButton() {
 		const ask = confirm('Logout?');
 		if (ask) {
-			const response = logout();
-			if (response?.status === 200) {
-				router.push({ name: 'login' });
-			}
+			const response = await AuthStore.logoutUser();
+			router.push({ name: 'login' });
 		}
 	}
 
-	//no pude hacerlo
-	/*
+	const navBarItems: ComputedRef<NavBarItem[]> = computed(() => [
+		{
+			innerText: 'My Notes',
+			routeName: 'notesList',
+			condition: AuthStore.isAuth.value,
+		},
+		{
+			innerText: 'New Note',
+			routeName: 'noteCreate',
+			condition: AuthStore.isAuth.value,
+		},
+		{
+			innerText: 'Login',
+			routeName: 'login',
+			condition: !AuthStore.isAuth.value,
+		},
+		{
+			innerText: 'Register',
+			routeName: 'register',
+			condition: !AuthStore.isAuth.value,
+		},
+		{
+			innerText: 'Admin',
+			routeName: 'admin',
+			condition: AuthStore.isAdmin.value,
+		},
+		{ innerText: 'About', routeName: 'about', condition: true },
+	]);
 
-	<li v-for="(link, key) in updatedLinks">
-				<router-link class="anchorItem" :key="key" :to="link.path">
-					{{ link.name }}
-				</router-link>
-			</li>
-	interface links {
-		name: string;
-		path: { name: string };
+	const filteredNavBarItems = computed(() => {
+		return navBarItems.value.filter((item) => item.condition);
+	});
+
+	// mobile
+	const sidePanelOpen = ref(false);
+	const openPanel = () => {
+		sidePanelOpen.value = !sidePanelOpen.value;
+	};
+
+	const showMenuButton = useTemplateRef('navShowButtonRef');
+	const subMenuRef = useTemplateRef('subMenuRef');
+	const blurEvent = () => {
+		sidePanelOpen.value = false;
+	};
+
+	const handleClickOutside = (event: MouseEvent) => {
+		const target = event.target as Node | null;
+		if (
+			showMenuButton?.value &&
+			subMenuRef.value &&
+			!showMenuButton.value.contains(target) &&
+			!subMenuRef.value.contains(target)
+		) {
+			sidePanelOpen.value = false;
+		}
+	};
+
+	onMounted(() => {
+		document.addEventListener('click', handleClickOutside);
+	});
+
+	onBeforeUnmount(() => {
+		document.removeEventListener('click', handleClickOutside);
+	});
+
+	interface NavBarItem {
+		innerText: string;
+		routeName: string;
 		condition: boolean;
 	}
-	
-		const rawsLinks = [
-		{ name: 'Home', path: { name: 'home' }, condition: true },
-		{
-			name: 'My Notes',
-			path: { name: 'tasksList' },
-			condition: authState.value?.logged,
-		},
-		{
-			name: 'Create Note',
-			path: { name: 'taskCreate' },
-			condition: true,
-		},
-		{ name: 'Login', path: { name: 'login' }, condition: true },
-		{ name: 'Register', path: { name: 'register' }, condition: true },
-		{ name: 'Admin', path: { name: 'admin' }, condition: false },
-	];
-
-	const links = ref(rawsLinks);
-
-	console.log('estados:', {
-		loginState: authState.value?.logged,
-		adminState: authState.value?.admin,
-	});
-	const updatedLinks = computed(() =>
-		links.value.filter((link) => link.condition)
-	);
-
-	*/
 </script>
 
 <style scoped>
-	#navContainer {
+	#hamburgerButton {
+		display: none;
+		position: fixed;
+		width: max-content;
+		height: max-content;
+		padding: 0;
+		margin: 0;
+		margin-left: 5px;
+		border: none;
+	}
+
+	#hamburgerIcon {
+		display: none;
+		margin: 0;
+		padding: 0;
+		width: 55px;
+		border: 1px solid white;
+		background-color: rgb(27, 27, 27);
+		border-radius: 10px;
+	}
+
+	.bottomMargin {
+		padding-bottom: 65px;
+	}
+
+	.navContainer {
 		height: 100px;
 		display: flex;
 		flex-direction: row;
@@ -122,14 +167,14 @@
 		justify-content: center;
 		width: max-content;
 		margin-top: 20px;
-		margin-bottom: 70px;
+		margin-bottom: 4 0px;
 		margin-left: auto;
 		margin-right: auto;
 		background-color: rgb(27, 27, 27);
 		border-radius: 20px;
 	}
 
-	#navContainer > li,
+	.navContainer > li,
 	.logoutButton {
 		height: 100%;
 		display: flex;
@@ -151,5 +196,54 @@
 
 	.logoutButton {
 		cursor: pointer;
+	}
+
+	.sidePanelOpened {
+		width: 100%;
+	}
+
+	@media only screen and (max-width: 768px) {
+		#hamburgerButton {
+			display: block;
+		}
+
+		#hamburgerIcon {
+			display: block;
+		}
+
+		.navContainer {
+			position: fixed;
+			right: 200%;
+			background-color: red;
+			display: flex;
+			width: max-content;
+			height: auto;
+			background-color: transparent;
+			flex-direction: column;
+			align-items: center;
+			justify-content: left;
+		}
+
+		.navContainer li {
+			display: none;
+			margin: 5px 0;
+			padding: 5px 1px;
+		}
+
+		.menuOpen {
+			background-color: rgb(27, 27, 27);
+			border: 1px solid white;
+			padding: 0;
+			margin: 0;
+			margin-left: 20px;
+			top: 5px;
+			left: 55px;
+		}
+
+		.menuOpen li {
+			display: block;
+			width: 100%;
+			margin: 5px auto;
+		}
 	}
 </style>
