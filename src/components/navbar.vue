@@ -46,7 +46,6 @@
 		computed,
 		onBeforeUnmount,
 		onMounted,
-		onUnmounted,
 		ref,
 		useTemplateRef,
 		type ComputedRef,

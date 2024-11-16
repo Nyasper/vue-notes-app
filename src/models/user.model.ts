@@ -1,5 +1,3 @@
-import type { NoteWithId } from './notes.model.';
-
 export interface User {
 	id: string;
 	username: string;
