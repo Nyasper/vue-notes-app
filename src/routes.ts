@@ -1,12 +1,18 @@
 import { createRouter, createWebHistory } from 'vue-router';
 import type { RouteRecordRaw } from 'vue-router';
 import { AuthStore } from './stores/authStore';
+import About from './pages/about.vue';
 
 const routes: RouteRecordRaw[] = [
 	{
+		name: 'home',
+		path: '',
+		component: About,
+	},
+	{
 		name: 'about',
 		path: '/about',
-		component: () => import('./pages/about.vue'),
+		component: () => About,
 	},
 	{
 		name: 'register',
