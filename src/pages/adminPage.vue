@@ -3,7 +3,7 @@
 </template>
 
 <script setup lang="ts">
-	import { AdminStore } from '@/stores/AdminStore';
+	import { AdminStore } from '@/stores/adminStore';
 	import AdminTable from '@/components/AdminTable.vue';
 
 	const { adminData } = AdminStore;

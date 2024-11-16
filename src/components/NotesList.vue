@@ -12,7 +12,7 @@
 </template>
 
 <script setup lang="ts">
-	import NoteItem from './NoteItem.vue';
+	import NoteItem from './noteItem.vue';
 	import router from '@/routes';
 	import type { NotesMapReadOnly } from '@/models/notes.model.';
 

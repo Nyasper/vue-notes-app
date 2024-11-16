@@ -19,8 +19,8 @@
 </template>
 
 <script setup lang="ts">
-	import { AuthStore } from '@/stores/AuthStore';
-	import { NotesStore } from '@/stores/NotesStore';
+	import { AuthStore } from '@/stores/authStore';
+	import { NotesStore } from '@/stores/notesStore';
 	import NotesList from '@/components/NotesList.vue';
 
 	const { notes, error, loading } = NotesStore;

@@ -49,8 +49,8 @@
 	import { computed, ref, watchEffect } from 'vue';
 	import { useRoute } from 'vue-router';
 	import router from '../routes';
-	import { NotesStore } from '@/stores/NotesStore';
-	import NotePreview from '@/components/NotePreview.vue';
+	import { NotesStore } from '@/stores/notesStore';
+	import NotePreview from '@/components/notePreview.vue';
 	import type { NoteUpdate } from '@/models/notes.model.';
 
 	const id = useRoute().params.key as string; // => get te 'key' parameter named as 'id'.

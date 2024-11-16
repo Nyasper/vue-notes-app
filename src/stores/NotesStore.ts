@@ -1,5 +1,5 @@
 import { computed, reactive, readonly, ref, type ComputedRef } from 'vue';
-import { useLoadingStore } from './LoadingStore';
+import { useLoadingStore } from './loadingStore';
 import type {
 	Note,
 	NoteInsert,

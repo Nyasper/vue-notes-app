@@ -4,7 +4,7 @@ import type {
 } from '@/models/adminData.model';
 import { computed, reactive, readonly, ref, type ComputedRef } from 'vue';
 import { getUsers as getUsersFromDb } from '@/services/adminService';
-import { useLoadingStore } from './LoadingStore';
+import { useLoadingStore } from './loadingStore';
 import { deleteUser as deleteUserFromDb } from '@/services/adminService';
 
 function useAdminStore() {

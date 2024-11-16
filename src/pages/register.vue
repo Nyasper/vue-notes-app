@@ -13,8 +13,8 @@
 <script setup lang="ts">
 	import { ref } from 'vue';
 	import router from '../routes';
-	import { AuthStore } from '@/stores/AuthStore';
-	import LoginForm from '@/components/LoginForm.vue';
+	import { AuthStore } from '@/stores/authStore';
+	import LoginForm from '@/components/loginForm.vue';
 	import { validateRegister } from '@/services/validator';
 	import type { RegisterBody } from '@/services/authService';
 

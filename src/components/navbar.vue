@@ -49,7 +49,7 @@
 		type ComputedRef,
 	} from 'vue';
 	import router from '../routes';
-	import { AuthStore } from '@/stores/AuthStore';
+	import { AuthStore } from '@/stores/authStore';
 
 	async function logoutButton() {
 		const ask = confirm('Logout?');

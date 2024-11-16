@@ -28,8 +28,8 @@
 
 <script setup lang="ts">
 	import { useRoute } from 'vue-router';
-	import { AdminStore } from '@/stores/AdminStore';
-	import NoteItem from '@/components/NoteItem.vue';
+	import { AdminStore } from '@/stores/adminStore';
+	import NoteItem from '@/components/noteItem.vue';
 
 	const { error, getUserInfo } = AdminStore;
 	const userId = useRoute().params.userId as string;
