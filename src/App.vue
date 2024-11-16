@@ -3,7 +3,7 @@
 </script>
 
 <template>
-	<navbar />
+	<Navbar />
 	<main id="mainContainer">
 		<RouterView />
 	</main>
