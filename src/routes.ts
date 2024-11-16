@@ -67,27 +67,27 @@ const router = createRouter({
 	routes,
 });
 
-// router.beforeEach(async (to) => {
-// 	// require auth
-// 	if (to.meta.requireAuth && !AuthStore.isAuth.value) {
-// 		return { name: 'login', query: { redirect: to.fullPath } };
-// 	}
+router.beforeEach(async (to) => {
+	// require auth
+	if (to.meta.requireAuth && !AuthStore.isAuth.value) {
+		return { name: 'login', query: { redirect: to.fullPath } };
+	}
 
-// 	// require admin
-// 	if (to.meta.requireAdmin) {
-// 		if (!AuthStore.isAdmin.value) {
-// 			// Si el usuario está autenticado pero no es administrador
-// 			if (AuthStore.isAuth.value) {
-// 				return { name: 'notesList', query: { redirect: to.fullPath } };
-// 			}
-// 			// Si no está autenticado (esto ya se verificó antes, pero se incluye por claridad)
-// 			return { name: 'login', query: { redirect: to.fullPath } };
-// 		}
-// 	}
+	// require admin
+	if (to.meta.requireAdmin) {
+		if (!AuthStore.isAdmin.value) {
+			// Si el usuario está autenticado pero no es administrador
+			if (AuthStore.isAuth.value) {
+				return { name: 'notesList', query: { redirect: to.fullPath } };
+			}
+			// Si no está autenticado (esto ya se verificó antes, pero se incluye por claridad)
+			return { name: 'login', query: { redirect: to.fullPath } };
+		}
+	}
 
-// 	// if (!to.meta.requireAuth && AuthStore.isAuth)
-// 	// 	return { name: 'notesList', query: { redirect: to.fullPath } };
-// });
+	// if (!to.meta.requireAuth && AuthStore.isAuth)
+	// 	return { name: 'notesList', query: { redirect: to.fullPath } };
+});
 
 export default router;
 

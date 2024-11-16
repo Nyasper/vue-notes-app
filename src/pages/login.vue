@@ -10,11 +10,11 @@
 
 <script setup lang="ts">
 	import { ref } from 'vue';
-	import LoginForm from '../components/LoginForm.vue';
-	import { AuthStore } from '@/stores/AuthStore';
 	import router from '../routes';
+	import { AuthStore } from '@/stores/AuthStore';
 	import { validateLogin } from '@/services/validator';
 	import type { LoginBody } from '@/services/authService';
+	import LoginForm from '@/components/LoginForm.vue';
 
 	const inputUsername = ref('');
 	const inputPassword = ref('');

@@ -27,10 +27,11 @@
 </template>
 
 <script setup lang="ts">
-	import { AdminStore } from '@/stores/AdminStore';
 	import { useRoute } from 'vue-router';
-	const { error, loading, getUserInfo } = AdminStore;
+	import { AdminStore } from '@/stores/AdminStore';
 	import NoteItem from '@/components/NoteItem.vue';
+
+	const { error, getUserInfo } = AdminStore;
 	const userId = useRoute().params.userId as string;
 	const userInfo = getUserInfo(userId);
 </script>

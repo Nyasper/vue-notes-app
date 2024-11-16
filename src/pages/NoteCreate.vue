@@ -25,9 +25,9 @@
 
 <script setup lang="ts">
 	import { ref } from 'vue';
-	import { NotesStore } from '@/stores/NotesStore';
-	import NotePreview from '../components/NotePreview.vue';
 	import router from '../routes';
+	import { NotesStore } from '@/stores/NotesStore';
+	import NotePreview from '@/components/NotePreview.vue';
 
 	const title = ref('');
 	const description = ref('');

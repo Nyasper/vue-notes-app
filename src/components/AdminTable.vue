@@ -33,6 +33,7 @@
 
 <script setup lang="ts">
 	import type { UserAdminMapReadonly } from '@/models/adminData.model';
+
 	const { adminData } = defineProps<Props>();
 
 	interface Props {

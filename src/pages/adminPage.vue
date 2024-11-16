@@ -3,8 +3,9 @@
 </template>
 
 <script setup lang="ts">
-	import AdminTable from '@/components/AdminTable.vue';
 	import { AdminStore } from '@/stores/AdminStore';
+	import AdminTable from '@/components/AdminTable.vue';
+
 	const { adminData } = AdminStore;
 
 	async function deleteUserFunc(id: string) {

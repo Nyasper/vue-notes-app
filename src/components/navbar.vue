@@ -29,7 +29,7 @@
 				</router-link>
 			</li>
 			<li
-				v-if="AuthStore.isAuth"
+				v-if="AuthStore.isAuth.value"
 				class="logoutButton"
 				:class="{ hiddenElement: !sidePanelOpen }"
 			>
@@ -40,8 +40,6 @@
 </template>
 
 <script setup lang="ts">
-	import { AuthStore } from '@/stores/AuthStore';
-	import router from '../routes';
 	import {
 		computed,
 		onBeforeUnmount,
@@ -50,6 +48,8 @@
 		useTemplateRef,
 		type ComputedRef,
 	} from 'vue';
+	import router from '../routes';
+	import { AuthStore } from '@/stores/AuthStore';
 
 	async function logoutButton() {
 		const ask = confirm('Logout?');

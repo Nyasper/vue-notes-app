@@ -46,11 +46,11 @@
 </template>
 
 <script setup lang="ts">
-	import NotePreview from '../components/NotePreview.vue';
-	import router from '../routes';
-	import { useRoute } from 'vue-router';
 	import { computed, ref, watchEffect } from 'vue';
+	import { useRoute } from 'vue-router';
+	import router from '../routes';
 	import { NotesStore } from '@/stores/NotesStore';
+	import NotePreview from '@/components/NotePreview.vue';
 	import type { NoteUpdate } from '@/models/notes.model.';
 
 	const id = useRoute().params.key as string; // => get te 'key' parameter named as 'id'.

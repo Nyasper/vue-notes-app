@@ -6,17 +6,11 @@
 	</div>
 </template>
 
-<script setup>
-	import { onMounted, onUnmounted } from 'vue';
+<script setup lang="ts">
 	import router from '@/routes';
-	let timeoutId;
-	onMounted(() => {
-		timeoutId = setTimeout(() => {
-			router.push('/tasks');
-		}, 3000);
-	});
+	import { useTimeout } from '@/composables/useTimeout';
 
-	onUnmounted(() => clearInterval(timeoutId));
+	useTimeout(() => router.push({ name: 'notesList' }), 1000);
 </script>
 
 <style scoped>

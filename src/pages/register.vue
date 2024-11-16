@@ -11,12 +11,12 @@
 </template>
 
 <script setup lang="ts">
-	import { ref, computed, watch } from 'vue';
+	import { ref } from 'vue';
 	import router from '../routes';
-	import LoginForm from '../components/LoginForm.vue';
 	import { AuthStore } from '@/stores/AuthStore';
-	import type { RegisterBody } from '@/services/authService';
+	import LoginForm from '@/components/LoginForm.vue';
 	import { validateRegister } from '@/services/validator';
+	import type { RegisterBody } from '@/services/authService';
 
 	const inputUsername = ref('');
 	const inputPassword = ref('');

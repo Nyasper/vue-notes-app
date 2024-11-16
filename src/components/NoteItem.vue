@@ -7,9 +7,9 @@
 </template>
 
 <script setup lang="ts">
-	import type { Note } from '@/models/notes.model.';
-	import { getFormattedDate } from '@/services/utils';
 	import { computed } from 'vue';
+	import { getFormattedDate } from '@/services/utils';
+	import type { Note } from '@/models/notes.model.';
 
 	const { note } = defineProps<Props>();
 	const formattedDate = computed(() => getFormattedDate(note.created));
