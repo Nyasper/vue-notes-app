@@ -58,4 +58,38 @@
 		width: 225px;
 		margin: 40px auto;
 	}
+
+	@media only screen and (max-width: 768px) {
+		#formContainer {
+			font-size: 1.1em;
+		}
+		input {
+			height: 32px;
+		}
+
+		label:first-of-type {
+			padding-top: 30px;
+		}
+		label:nth-of-type(3) {
+			padding-top: 15px;
+		}
+
+		#username {
+			margin: 5px auto;
+			width: 80%;
+			margin-bottom: 35px;
+		}
+		#password,
+		#password2 {
+			margin: 5px auto;
+			width: 80%;
+		}
+
+		#submitButton {
+			display: block;
+			width: max-content;
+			margin: 20px auto;
+			margin-bottom: 30px;
+		}
+	}
 </style>
