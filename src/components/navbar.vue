@@ -40,16 +40,10 @@
 </template>
 
 <script setup lang="ts">
-	import {
-		computed,
-		onBeforeUnmount,
-		onMounted,
-		ref,
-		useTemplateRef,
-		type ComputedRef,
-	} from 'vue';
-	import router from '../routes';
+	import { computed, ref, useTemplateRef, type ComputedRef } from 'vue';
 	import { AuthStore } from '@/stores/authStore';
+	import router from '../routes';
+	import { useDocumentEvent } from '@/composables/useDocumentEvent';
 
 	async function logoutButton() {
 		const ask = confirm('Logout?');
@@ -98,16 +92,14 @@
 		sidePanelOpen.value = !sidePanelOpen.value;
 	};
 
+	// subMenu|hamburgerMenu logic
 	const showMenuButton = useTemplateRef('navShowButtonRef');
 	const subMenuRef = useTemplateRef('subMenuRef');
-	const blurEvent = () => {
-		sidePanelOpen.value = false;
-	};
 
 	const handleClickOutside = (event: MouseEvent) => {
 		const target = event.target as Node | null;
 		if (
-			showMenuButton?.value &&
+			showMenuButton.value &&
 			subMenuRef.value &&
 			!showMenuButton.value.contains(target) &&
 			!subMenuRef.value.contains(target)
@@ -116,13 +108,14 @@
 		}
 	};
 
-	onMounted(() => {
-		document.addEventListener('click', handleClickOutside);
-	});
-
-	onBeforeUnmount(() => {
-		document.removeEventListener('click', handleClickOutside);
-	});
+	const closeSubMenuOnClick = (event: MouseEvent) => {
+		const target = event.target as Node | null;
+		if (subMenuRef.value && subMenuRef.value.contains(target)) {
+			sidePanelOpen.value = false;
+		}
+	};
+	useDocumentEvent('click', closeSubMenuOnClick);
+	useDocumentEvent('click', handleClickOutside);
 
 	interface NavBarItem {
 		innerText: string;

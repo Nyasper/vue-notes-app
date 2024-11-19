@@ -48,8 +48,8 @@
 			font-size: 26px;
 			width: max-content;
 			z-index: -1;
-			top: 20px;
-			left: 100px;
+			top: 0px;
+			left: 65px;
 		}
 	}
 </style>

@@ -33,39 +33,40 @@
 		align-items: center;
 		border-radius: 20px;
 		transition: all 0.05s;
-	}
 
-	.note:hover {
-		background-color: rgb(0, 0, 0);
-		cursor: pointer;
-		scale: 1.2;
-		transition: all 0.04s;
-	}
+		&:hover {
+			background-color: rgb(0, 0, 0);
+			cursor: pointer;
+			scale: 1.2;
+			transition: all 0.04s;
+		}
 
-	.note > span {
-		display: block;
-		margin-top: auto;
+		span {
+			display: block;
+			margin-top: auto;
+		}
 	}
 
 	@media only screen and (max-width: 768px) {
 		.note {
-			width: 100%;
-			padding: 0;
-			margin: 0;
+			width: 90%;
+			padding: 2px;
+			margin: 5px;
 			border: 1px solid white;
-		}
-		.note > h2 {
-			text-align: center;
-			font-size: 20px;
-		}
-		.note > p {
-			font-size: 16px;
-			word-wrap: break-word;
-		}
 
-		.note > span {
-			font-size: 18px;
-			padding-bottom: 10px;
+			h2 {
+				text-align: center;
+				font-size: 20px;
+			}
+
+			p {
+				font-size: 16px;
+				word-wrap: break-word;
+			}
+			span {
+				font-size: 18px;
+				padding-bottom: 10px;
+			}
 		}
 	}
 </style>

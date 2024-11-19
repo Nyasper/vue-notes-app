@@ -37,8 +37,8 @@
 
 	const content = {
 		buttonSwitchLanguage: {
-			en: 'Switch to English',
-			es: 'Cambiar a español',
+			en: 'Switch to Spanish',
+			es: 'Cambiar al inglés',
 		},
 		h1: {
 			en: 'About',
