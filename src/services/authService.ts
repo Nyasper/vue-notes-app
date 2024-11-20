@@ -1,35 +1,61 @@
 import { fetchClient, authBase } from './fetchClient';
 import type { ResponseWithData, ResponseWithMessage } from './response.type';
 import type { UserInfo } from '@/models/user.model';
-import { errorServerDoesntRespond } from './fetchClient';
+import type { FetchError } from './fetchError';
 
 export async function loginUser(
 	credentialts: LoginBody
 ): Promise<ResponseWithMessage> {
 	try {
-		const response = await fetchClient<ResponseWithMessage, LoginBody>(
-			authBase('/login'),
-			'POST',
-			credentialts
-		);
-		return response;
+		const { response, status } = await fetchClient<
+			ResponseWithMessage,
+			LoginBody
+		>(authBase('/login'), 'POST', credentialts);
+		return { ...response, status };
 	} catch (error) {
-		return errorServerDoesntRespond(error);
+		return error as FetchError;
 	}
 }
 
-export const registerUser = async (credentials: RegisterBody) =>
-	await fetchClient<ResponseWithMessage, RegisterBody>(
-		authBase('/register'),
-		'POST',
-		credentials
-	);
+export async function registerUser(
+	credentials: RegisterBody
+): Promise<ResponseWithMessage> {
+	try {
+		const { response, status } = await fetchClient<
+			ResponseWithMessage,
+			RegisterBody
+		>(authBase('/register'), 'POST', credentials);
 
-export const logoutUser = async () =>
-	await fetchClient<ResponseWithMessage>(authBase('/logout'), 'POST');
+		return { ...response, status };
+	} catch (error) {
+		return error as FetchError;
+	}
+}
 
-export const getUserInfo = async () =>
-	await fetchClient<ResponseWithData<UserInfo>>(authBase('/info'));
+export async function logoutUser(): Promise<ResponseWithMessage> {
+	try {
+		const { response, status } = await fetchClient<ResponseWithMessage>(
+			authBase('/logout'),
+			'POST'
+		);
+
+		return { ...response, status };
+	} catch (error) {
+		return error as FetchError;
+	}
+}
+
+export async function getUserInfo(): Promise<ResponseWithData<UserInfo>> {
+	try {
+		const { response, status } = await fetchClient<ResponseWithData<UserInfo>>(
+			authBase('/info')
+		);
+
+		return { ...response, status };
+	} catch (error) {
+		return error as FetchError;
+	}
+}
 
 // types
 

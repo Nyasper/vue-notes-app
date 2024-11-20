@@ -1,12 +1,15 @@
 interface BaseResponse {
 	success: boolean;
-	statusCode?: number;
 }
 
-export interface ResponseWithMessage extends BaseResponse {
+interface Status {
+	status: number;
+}
+
+export interface ResponseWithMessage extends BaseResponse, Status {
 	message: string;
 }
 
-export interface ResponseWithData<T> extends ResponseWithMessage {
-	data?: T;
+export interface ResponseWithData<T> extends ResponseWithMessage, Status {
+	data: T | null;
 }

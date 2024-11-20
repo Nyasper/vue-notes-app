@@ -49,6 +49,7 @@
 		const ask = confirm('Logout?');
 		if (ask) {
 			const response = await AuthStore.logoutUser();
+			console.log({ response });
 			router.push({ name: 'login' });
 		}
 	}

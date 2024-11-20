@@ -3,25 +3,21 @@ import type {
 	NoteInsert,
 	NoteUpdate,
 } from '../models/notes.model..js';
-import {
-	errorServerDoesntRespond,
-	fetchClient,
-	notesBase,
-} from './fetchClient.js';
+import { fetchClient, notesBase } from './fetchClient.js';
 import type { ResponseWithData, ResponseWithMessage } from './response.type.js';
+import type { FetchError } from './fetchError.js';
 
 export async function createNote(
 	taskToInsert: NoteInsert
 ): Promise<ResponseWithData<NoteWithId>> {
 	try {
-		const data = await fetchClient<ResponseWithData<NoteWithId>, NoteInsert>(
-			notesBase(''),
-			'POST',
-			taskToInsert
-		);
-		return data;
+		const { response, status } = await fetchClient<
+			ResponseWithData<NoteWithId>,
+			NoteInsert
+		>(notesBase(''), 'POST', taskToInsert);
+		return { ...response, status };
 	} catch (error) {
-		return errorServerDoesntRespond(error);
+		return error as FetchError;
 	}
 }
 
@@ -29,23 +25,23 @@ export async function getNote(
 	id: string
 ): Promise<ResponseWithData<NoteWithId>> {
 	try {
-		const data = await fetchClient<ResponseWithData<NoteWithId>>(
-			notesBase(`/${id}`)
-		);
-		return data;
+		const { response, status } = await fetchClient<
+			ResponseWithData<NoteWithId>
+		>(notesBase(`/${id}`));
+		return { ...response, status };
 	} catch (error) {
-		return errorServerDoesntRespond(error);
+		return error as FetchError;
 	}
 }
 
 export async function getNotes(): Promise<ResponseWithData<NoteWithId[]>> {
 	try {
-		const data = await fetchClient<ResponseWithData<NoteWithId[]>>(
-			notesBase('/all')
-		);
-		return data;
+		const { response, status } = await fetchClient<
+			ResponseWithData<NoteWithId[]>
+		>(notesBase('/all'));
+		return { ...response, status };
 	} catch (error) {
-		return errorServerDoesntRespond(error);
+		return error as FetchError;
 	}
 }
 
@@ -54,27 +50,26 @@ export async function updateNote(
 	noteToUpdate: NoteUpdate
 ): Promise<ResponseWithData<NoteWithId>> {
 	try {
-		const data = await fetchClient<ResponseWithData<NoteWithId>, NoteUpdate>(
-			notesBase(`/${id}`),
-			'PUT',
-			noteToUpdate
-		);
+		const { response, status } = await fetchClient<
+			ResponseWithData<NoteWithId>,
+			NoteUpdate
+		>(notesBase(`/${id}`), 'PUT', noteToUpdate);
 
-		return data;
+		return { ...response, status };
 	} catch (error) {
-		return errorServerDoesntRespond(error);
+		return error as FetchError;
 	}
 }
 
 export async function deleteNote(id: string): Promise<ResponseWithMessage> {
 	try {
-		const data = await fetchClient<ResponseWithMessage>(
+		const { response, status } = await fetchClient<ResponseWithMessage>(
 			notesBase(`/${id}`),
 			'DELETE'
 		);
 
-		return data;
+		return { ...response, status };
 	} catch (error) {
-		return errorServerDoesntRespond(error);
+		return error as FetchError;
 	}
 }

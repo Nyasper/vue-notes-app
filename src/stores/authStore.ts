@@ -1,29 +1,31 @@
 import { computed, reactive, readonly, ref } from 'vue';
-import {
-	getUserInfo as getUserInfoFromDb,
-	type LoginBody,
-	type RegisterBody,
-} from '@/services/authService';
+import { type LoginBody, type RegisterBody } from '@/services/authService';
 import type { UserInfo } from '@/models/user.model';
 import {
 	registerUser as registerUserInDB,
 	loginUser as loginUserinDb,
 	logoutUser as logoutUserInDb,
+	getUserInfo as getUserInfoFromDb,
 } from '@/services/authService';
-import type { ResponseWithMessage } from '@/services/response.type';
+import type {
+	ResponseWithData,
+	ResponseWithMessage,
+} from '@/services/response.type';
 
 function useAuthStore() {
 	const user = reactive<UserInfo>({});
 	const isAuth = ref(false);
 
-	async function getUserInfo(): Promise<void> {
+	async function getUserInfo(): Promise<
+		ResponseWithData<UserInfo | undefined>
+	> {
 		const userInfo = await getUserInfoFromDb();
 		if (!userInfo.success) {
 			isAuth.value = false;
-			return;
 		}
-		isAuth.value = true;
 		Object.assign(user, userInfo.data);
+		isAuth.value = true;
+		return userInfo;
 	}
 	getUserInfo();
 
@@ -51,6 +53,7 @@ function useAuthStore() {
 
 	async function logoutUser(): Promise<ResponseWithMessage> {
 		const res = await logoutUserInDb();
+		document.cookie = 'token=; expires=Thu, 01 Jan 1970 00:00:00 UTC; path=/';
 		await getUserInfo();
 		return res;
 	}
