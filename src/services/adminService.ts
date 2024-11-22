@@ -1,46 +1,45 @@
 import type { UserAdminDataWithId } from '@/models/adminData.model';
-import {
-	adminUsersBase,
-	errorServerDoesntRespond,
-	fetchClient,
-} from './fetchClient';
+import { adminUsersBase, fetchClient } from './fetchClient';
 import type { ResponseWithData, ResponseWithMessage } from './response.type';
+import type { FetchError } from './fetchError';
 
 export async function getUsers(): Promise<
 	ResponseWithData<UserAdminDataWithId[]>
 > {
 	try {
-		const data = await fetchClient<ResponseWithData<UserAdminDataWithId[]>>(
-			adminUsersBase('/all')
-		);
-		return data;
-	} catch (error) {
-		return errorServerDoesntRespond(error);
+		const { response, statusCode } = await fetchClient<
+			ResponseWithData<UserAdminDataWithId[]>
+		>(adminUsersBase('/all'));
+		return { ...response, statusCode };
+	} catch (e) {
+		const response = e as FetchError;
+		return { ...response, data: [] };
 	}
 }
 
 export async function getUser(
 	id: string
-): Promise<ResponseWithData<UserAdminDataWithId>> {
+): Promise<ResponseWithData<UserAdminDataWithId | null>> {
 	try {
-		const data = await fetchClient<ResponseWithData<UserAdminDataWithId>>(
-			adminUsersBase(`/${id}`)
-		);
-		return data;
-	} catch (error) {
-		return errorServerDoesntRespond(error);
+		const { response, statusCode } = await fetchClient<
+			ResponseWithData<UserAdminDataWithId>
+		>(adminUsersBase(`/${id}`));
+		return { ...response, statusCode };
+	} catch (e) {
+		const response = e as FetchError;
+		return { ...response, data: null };
 	}
 }
 
 export async function deleteUser(id: string): Promise<ResponseWithMessage> {
 	try {
-		const data = await fetchClient<ResponseWithMessage>(
+		const { response, statusCode } = await fetchClient<ResponseWithMessage>(
 			adminUsersBase(`/${id}`),
 			'DELETE'
 		);
 
-		return data;
-	} catch (error) {
-		return errorServerDoesntRespond(error);
+		return { ...response, statusCode };
+	} catch (e) {
+		return e as FetchError;
 	}
 }

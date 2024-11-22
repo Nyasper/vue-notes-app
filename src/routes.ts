@@ -79,10 +79,11 @@ const router = createRouter({
 });
 
 router.beforeEach(async (to) => {
-	await AuthStore.getUserInfo();
 	if (to.meta.requireAuth) {
 		if (!AuthStore.isAuth.value) {
-			return { name: 'login' };
+			if (to.name !== 'login') {
+				return { name: 'login' };
+			}
 		}
 
 		// require admin
@@ -95,11 +96,18 @@ router.beforeEach(async (to) => {
 			}
 		}
 	}
+
+	// if (to.meta.requireAdmin) {
+	// 	if (!AuthStore.isAdmin.value) {
+	// 		if (AuthStore.isAuth.value && to.name !== 'notesList') {
+	// 			return { name: 'notesList' };
+	// 		}
+	// 	}
+	// }
 });
 
 async function ifNotAuth(to: RouteLocationNormalizedGeneric) {
-	await AuthStore.getUserInfo();
-	if (AuthStore.isAuth) return { name: 'notesList' };
+	if (AuthStore.isAuth.value) return { name: 'notesList' };
 }
 
 export default router;
