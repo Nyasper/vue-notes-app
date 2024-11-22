@@ -4,52 +4,56 @@ import type {
 } from '@/models/adminData.model';
 import { computed, reactive, readonly, ref, type ComputedRef } from 'vue';
 import { getUsers as getUsersFromDb } from '@/services/adminService';
-import { useLoadingStore } from './loadingStore';
+import { useLoading } from '../composables/useLoading';
 import { deleteUser as deleteUserFromDb } from '@/services/adminService';
+import { useStatus } from '@/composables/useStoreStatus';
+import type { FetchError } from '@/services/fetchError';
 
 function useAdminStore() {
 	const adminData = reactive(new Map<string, UserAdminData>());
-	const error = ref<string | null>(null);
-	let fetchedOnce = false;
-	const LoadingState = useLoadingStore();
+	const { status, updateStatus } = useStatus({
+		success: false,
+		statusCode: 0,
+		message: '',
+		loading: useLoading(),
+		fetchedOnce: false,
+	});
 
 	async function getAdminData(): Promise<void> {
-		if (fetchedOnce) return;
-		LoadingState.startLoading();
+		if (status.fetchedOnce) return;
+		status.loading.startLoading();
 
 		try {
 			const response = await getUsersFromDb();
 			if (!response.success) return;
 			response.data!.forEach(({ id, ...data }) => adminData.set(id, data));
+
+			updateStatus(response);
 		} catch (e) {
-			if (e instanceof Error) {
-				error.value = e.message;
-				console.error(e.message);
-			} else {
-				error.value = e as string;
-				console.error(e);
-			}
-		} finally {
-			LoadingState.stopLoading();
+			updateStatus(e as FetchError);
 		}
 	}
 	getAdminData();
+
+	async function deleteUser(id: string) {
+		status.loading.startLoading();
+		const response = await deleteUserFromDb(id);
+		await getAdminData();
+		updateStatus(response);
+	}
 
 	function getUserInfo(id: string): ComputedRef<UserAdminData | null> {
 		return computed(() => adminData.get(id) ?? null);
 	}
 
-	async function deleteUser(id: string) {
-		await deleteUserFromDb(id);
-		await getAdminData();
-	}
-
 	return {
+		// states
 		adminData: readonly(adminData) as UserAdminMapReadonly,
+		status: readonly(status),
+
+		// methods
 		getUserInfo,
 		deleteUser,
-		error,
-		loading: LoadingState.loading,
 	};
 }
 

@@ -1,67 +1,107 @@
-import { computed, reactive, readonly, ref } from 'vue';
+import { reactive, readonly, ref } from 'vue';
 import { type LoginBody, type RegisterBody } from '@/services/authService';
 import type { UserInfo } from '@/models/user.model';
 import {
 	registerUser as registerUserInDB,
-	loginUser as loginUserinDb,
+	loginUser as loginUserInDb,
 	logoutUser as logoutUserInDb,
 	getUserInfo as getUserInfoFromDb,
 } from '@/services/authService';
-import type {
-	ResponseWithData,
-	ResponseWithMessage,
-} from '@/services/response.type';
+import type { FetchError } from '@/services/fetchError';
+import { useStatus } from '../composables/useStoreStatus';
+import { useLoading } from '../composables/useLoading';
 
 function useAuthStore() {
 	const user = reactive<UserInfo>({});
 	const isAuth = ref(false);
+	const isAdmin = ref(false);
 
-	async function getUserInfo(): Promise<
-		ResponseWithData<UserInfo | undefined>
-	> {
-		const userInfo = await getUserInfoFromDb();
-		if (!userInfo.success) {
-			isAuth.value = false;
+	function updateUserInfo(newData: UserInfo | null) {
+		if (!newData) return;
+		Object.assign(user, newData);
+	}
+
+	// store status
+	const { status, updateStatus } = useStatus({
+		success: false,
+		statusCode: 0,
+		message: '',
+		loading: useLoading(),
+		donRetry: false,
+	});
+
+	async function getUserInfo(): Promise<void> {
+		// if (status.donRetry) return;
+		try {
+			status.loading.startLoading(); // => when calling updateStatus() it automatic stop the loading state.
+			const userInfo = await getUserInfoFromDb();
+			isAuth.value = userInfo.success ?? false;
+			isAdmin.value = userInfo.success && !!userInfo.data?.admin;
+			if (status.statusCode === 401) {
+				status.donRetry = true;
+			}
+
+			updateStatus(userInfo);
+			updateUserInfo(userInfo.data);
+		} catch (error) {
+			updateStatus(error as FetchError);
 		}
-		Object.assign(user, userInfo.data);
-		isAuth.value = true;
-		return userInfo;
 	}
 	getUserInfo();
-
 	// const isAuth = computed(() => {
 	// 	const isAuth = !!user.id && !!user.username;
 	// 	console.log(isAuth);
 	// 	return isAuth;
 	// }); // !! => convert the values to boolean
-	const isAdmin = computed(() => isAuth.value && user?.admin === true);
+	// const isAdmin = computed(() => isAuth.value && user?.admin === true);
 
-	async function loginUser(
-		credentialts: LoginBody
-	): Promise<ResponseWithMessage> {
-		const res = await loginUserinDb(credentialts);
-		await getUserInfo();
-		return res;
+	async function loginUser(credentialts: LoginBody): Promise<void> {
+		try {
+			status.loading.startLoading();
+			const response = await loginUserInDb(credentialts);
+			await getUserInfo();
+
+			updateStatus(response);
+			console.log({ loginRes: response });
+		} catch (error) {
+			updateStatus(error as FetchError);
+		}
 	}
 
-	async function registerUser(
-		credentialts: RegisterBody
-	): Promise<ResponseWithMessage> {
-		const res = await registerUserInDB(credentialts);
-		return res;
+	async function registerUser(credentialts: RegisterBody): Promise<void> {
+		try {
+			status.loading.startLoading();
+			const response = await registerUserInDB(credentialts);
+
+			updateStatus(response);
+		} catch (error) {
+			updateStatus(error as FetchError);
+		}
 	}
 
-	async function logoutUser(): Promise<ResponseWithMessage> {
-		const res = await logoutUserInDb();
-		document.cookie = 'token=; expires=Thu, 01 Jan 1970 00:00:00 UTC; path=/';
-		await getUserInfo();
-		return res;
+	async function logoutUser(): Promise<void> {
+		try {
+			status.loading.startLoading();
+			const response = await logoutUserInDb();
+			document.cookie =
+				'token=; expires=Thu, 01 Jan 1970 00:00:00 UTC; path=/;';
+			isAuth.value = false;
+			isAdmin.value = false;
+			updateStatus(response);
+			console.log('deslogeando:');
+		} catch (error) {
+			updateStatus(error as FetchError);
+		}
 	}
 
 	return {
+		// states
 		user: readonly(user),
+		status: readonly(status),
 		isAuth: readonly(isAuth),
-		isAdmin,
+		isAdmin: readonly(isAdmin),
+
+		// methods
 		getUserInfo,
 		registerUser,
 		loginUser,

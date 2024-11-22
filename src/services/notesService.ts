@@ -9,67 +9,71 @@ import type { FetchError } from './fetchError.js';
 
 export async function createNote(
 	taskToInsert: NoteInsert
-): Promise<ResponseWithData<NoteWithId>> {
+): Promise<ResponseWithData<NoteWithId | null>> {
 	try {
-		const { response, status } = await fetchClient<
+		const { response, statusCode } = await fetchClient<
 			ResponseWithData<NoteWithId>,
 			NoteInsert
 		>(notesBase(''), 'POST', taskToInsert);
-		return { ...response, status };
-	} catch (error) {
-		return error as FetchError;
+		return { ...response, statusCode };
+	} catch (e) {
+		const response = e as FetchError;
+		return { ...response, data: null };
 	}
 }
 
 export async function getNote(
 	id: string
-): Promise<ResponseWithData<NoteWithId>> {
+): Promise<ResponseWithData<NoteWithId | null>> {
 	try {
-		const { response, status } = await fetchClient<
+		const { response, statusCode } = await fetchClient<
 			ResponseWithData<NoteWithId>
 		>(notesBase(`/${id}`));
-		return { ...response, status };
-	} catch (error) {
-		return error as FetchError;
+		return { ...response, statusCode };
+	} catch (e) {
+		const response = e as FetchError;
+		return { ...response, data: null };
 	}
 }
 
 export async function getNotes(): Promise<ResponseWithData<NoteWithId[]>> {
 	try {
-		const { response, status } = await fetchClient<
+		const { response, statusCode } = await fetchClient<
 			ResponseWithData<NoteWithId[]>
 		>(notesBase('/all'));
-		return { ...response, status };
-	} catch (error) {
-		return error as FetchError;
+		return { ...response, statusCode };
+	} catch (e) {
+		const response = e as FetchError;
+		return { ...response, data: [] };
 	}
 }
 
 export async function updateNote(
 	id: string,
 	noteToUpdate: NoteUpdate
-): Promise<ResponseWithData<NoteWithId>> {
+): Promise<ResponseWithData<NoteWithId | null>> {
 	try {
-		const { response, status } = await fetchClient<
+		const { response, statusCode } = await fetchClient<
 			ResponseWithData<NoteWithId>,
 			NoteUpdate
 		>(notesBase(`/${id}`), 'PUT', noteToUpdate);
 
-		return { ...response, status };
-	} catch (error) {
-		return error as FetchError;
+		return { ...response, statusCode };
+	} catch (e) {
+		const response = e as FetchError;
+		return { ...response, data: null };
 	}
 }
 
 export async function deleteNote(id: string): Promise<ResponseWithMessage> {
 	try {
-		const { response, status } = await fetchClient<ResponseWithMessage>(
+		const { response, statusCode } = await fetchClient<ResponseWithMessage>(
 			notesBase(`/${id}`),
 			'DELETE'
 		);
 
-		return { ...response, status };
-	} catch (error) {
-		return error as FetchError;
+		return { ...response, statusCode };
+	} catch (e) {
+		return e as FetchError;
 	}
 }

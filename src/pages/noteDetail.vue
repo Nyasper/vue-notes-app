@@ -1,5 +1,5 @@
 <template>
-	<section class="taskDetailContainer" v-if="note">
+	<!-- <section class="taskDetailContainer" v-if="note">
 		<NotePreview :title="note.title" :description="note.description" />
 
 		<div v-if="note !== null" class="inputsContainer">
@@ -36,13 +36,21 @@
 				<button @click.prevent="deleteNote()">Delete Note</button>
 			</section>
 		</div>
-	</section>
+	</section> -->
 
-	<section v-else="error">
+	<!-- <section v-else="error">
 		<h3>
 			Something went wrong: <span class="errorMessage">{{ error }}</span>
 		</h3>
-	</section>
+	</section> -->
+	<NoteEditor
+		:id
+		mode="update"
+		v-model:title="provTitle"
+		v-model:description="provDesc"
+		:onSubmit="updateNoteAction"
+		:deleteAction="deleteAction"
+	/>
 </template>
 
 <script setup lang="ts">
@@ -50,12 +58,14 @@
 	import { useRoute } from 'vue-router';
 	import router from '../routes';
 	import { NotesStore } from '@/stores/notesStore';
-	import NotePreview from '@/components/notePreview.vue';
 	import type { NoteUpdate } from '@/models/notes.model.';
+	import NoteEditor from '@/components/noteEditor.vue';
 
 	const id = useRoute().params.key as string; // => get te 'key' parameter named as 'id'.
 	const error = ref<string | null>(null);
 
+	const provTitle = computed(() => note.value?.title ?? '');
+	const provDesc = computed(() => note.value?.description ?? '');
 	const note = NotesStore.getNoteById(id);
 	if (note.value === null) error.value = 'Error on getting note with Id';
 
@@ -75,28 +85,25 @@
 		);
 	});
 
-	async function updateNoteFunc() {
-		try {
-			if (note.value === null) return;
+	async function updateNoteAction() {
+		if (note.value === null) return;
 
-			const taskUpdated: NoteUpdate = {
-				title: note.value.title,
-				description: note.value.description,
-			};
+		const taskUpdated: NoteUpdate = {
+			title: note.value.title,
+			description: note.value.description,
+		};
 
-			const noteUpdated = await NotesStore.updateNote(id, taskUpdated);
-			console.log('note updated:', noteUpdated);
-			router.push({ name: 'notesList' });
-		} catch (error) {
-			console.error('Error on updating task', error);
-			location.reload();
-		}
+		await NotesStore.updateNote(id, taskUpdated);
+		const { success, statusCode, message } = NotesStore.status;
+		console.log({ success, statusCode, message });
+		router.push({ name: 'notesList' });
 	}
 
-	async function deleteNote() {
+	async function deleteAction() {
 		if (note.value === null) return;
 
 		await NotesStore.deleteNote(id);
+		const { success, statusCode, message } = NotesStore.status;
 		router.push({ name: 'notesList' });
 	}
 </script>

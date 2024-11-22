@@ -1,5 +1,5 @@
 <template>
-	<div id="taskFormContainer">
+	<!-- <div id="taskFormContainer">
 		<form @submit.prevent="saveTask" id="taskForm">
 			<h2>Add a Note</h2>
 			<span id="titleCounter">{{ `${title.length}/60` }}</span>
@@ -20,14 +20,19 @@
 			<button id="saveButton" :disabled="title.length === 0">Save</button>
 		</form>
 		<NotePreview :title :description />
-	</div>
+	</div> -->
+	<NoteEditor
+		v-model:title="title"
+		v-model:description="description"
+		:onSubmit="saveTask"
+	/>
 </template>
 
 <script setup lang="ts">
 	import { ref } from 'vue';
 	import router from '../routes';
 	import { NotesStore } from '@/stores/notesStore';
-	import NotePreview from '@/components/notePreview.vue';
+	import NoteEditor from '@/components/noteEditor.vue';
 
 	const title = ref('');
 	const description = ref('');
@@ -38,8 +43,10 @@
 			description: description.value,
 		};
 
-		const newNote = await NotesStore.createNote(taskToInsert);
-		console.info('note created:', newNote);
+		await NotesStore.createNote(taskToInsert);
+		const { success, statusCode, message } = NotesStore.status;
+		console.info({ success, statusCode, message });
+
 		router.push({ name: 'notesList' });
 	}
 </script>

@@ -7,37 +7,39 @@ export async function getUsers(): Promise<
 	ResponseWithData<UserAdminDataWithId[]>
 > {
 	try {
-		const { response, status } = await fetchClient<
+		const { response, statusCode } = await fetchClient<
 			ResponseWithData<UserAdminDataWithId[]>
 		>(adminUsersBase('/all'));
-		return { ...response, status };
-	} catch (error) {
-		return error as FetchError;
+		return { ...response, statusCode };
+	} catch (e) {
+		const response = e as FetchError;
+		return { ...response, data: [] };
 	}
 }
 
 export async function getUser(
 	id: string
-): Promise<ResponseWithData<UserAdminDataWithId>> {
+): Promise<ResponseWithData<UserAdminDataWithId | null>> {
 	try {
-		const { response, status } = await fetchClient<
+		const { response, statusCode } = await fetchClient<
 			ResponseWithData<UserAdminDataWithId>
 		>(adminUsersBase(`/${id}`));
-		return { ...response, status };
-	} catch (error) {
-		return error as FetchError;
+		return { ...response, statusCode };
+	} catch (e) {
+		const response = e as FetchError;
+		return { ...response, data: null };
 	}
 }
 
 export async function deleteUser(id: string): Promise<ResponseWithMessage> {
 	try {
-		const { response, status } = await fetchClient<ResponseWithMessage>(
+		const { response, statusCode } = await fetchClient<ResponseWithMessage>(
 			adminUsersBase(`/${id}`),
 			'DELETE'
 		);
 
-		return { ...response, status };
-	} catch (error) {
-		return error as FetchError;
+		return { ...response, statusCode };
+	} catch (e) {
+		return e as FetchError;
 	}
 }

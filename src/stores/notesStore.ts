@@ -1,5 +1,5 @@
 import { computed, reactive, readonly, ref, type ComputedRef } from 'vue';
-import { useLoadingStore } from './loadingStore';
+import { useLoading } from '../composables/useLoading';
 import type {
 	Note,
 	NoteInsert,
@@ -12,68 +12,85 @@ import {
 	deleteNote as deleteNoteInDB,
 	updateNote as updateNoteInDB,
 } from '../services/notesService';
+import { useStatus } from '../composables/useStoreStatus';
+import type { FetchError } from '@/services/fetchError';
+import type { NoteStoreStatus } from './stores.types';
 
 function useNotesStore() {
 	const notes = reactive(new Map<string, Note>());
-	const error = ref<string | null>(null);
-	let fetchedOnce = false;
-	const LoadingState = useLoadingStore();
+
+	const { status, updateStatus } = useStatus({
+		success: false,
+		statusCode: 0,
+		message: '',
+		fetchedOnce: false,
+		loading: useLoading(),
+	});
 
 	async function getData() {
-		if (fetchedOnce) return;
-		LoadingState.startLoading();
+		if (status.fetchedOnce) return;
+		status.loading.startLoading();
+
 		try {
 			const response = await getNotesFromDb();
 			if (!response.success) return;
 			response.data!.forEach(({ id, ...Note }) => notes.set(id, Note));
-		} catch (e) {
-			if (e instanceof Error) {
-				error.value = e.message;
-				console.error(e.message);
-			} else {
-				error.value = e as string;
-				console.error(e);
-			}
-		} finally {
-			fetchedOnce = true;
-			LoadingState.stopLoading();
+			status.fetchedOnce = true;
+			updateStatus(response);
+		} catch (error) {
+			updateStatus(error as FetchError);
 		}
 	}
 	getData();
 
-	async function createNote(noteToInsert: NoteInsert): Promise<Note | null> {
-		const { success, data } = await createNoteInDB(noteToInsert);
-		if (!success) return null;
+	async function createNote(noteToInsert: NoteInsert): Promise<void> {
+		status.loading.startLoading();
+		try {
+			const { data, ...response } = await createNoteInDB(noteToInsert);
 
-		const { id, ...newNote } = data as NoteWithId;
-		notes.set(id, newNote);
+			const { id, ...newNote } = data as NoteWithId;
+			notes.set(id, newNote);
 
-		return newNote;
+			updateStatus(response);
+		} catch (error) {
+			updateStatus(error as FetchError);
+		}
 	}
 
 	async function updateNote(
 		paramId: string,
 		newsValues: NoteUpdate
-	): Promise<Note | null> {
-		if (!notes.has(paramId)) return null;
+	): Promise<void> {
+		status.loading.startLoading();
+		try {
+			if (!notes.has(paramId)) return;
 
-		const { success, data } = await updateNoteInDB(paramId, newsValues);
-		if (!success) return null;
+			const { data, ...response } = await updateNoteInDB(paramId, newsValues);
+			if (!response.success) return;
 
-		const { id, ...updatedNote } = data as NoteWithId;
-		const noteToUpdate = notes.get(paramId);
-		if (!noteToUpdate) return null;
+			const { id, ...updatedNote } = data as NoteWithId;
+			const noteToUpdate = notes.get(paramId);
+			if (!noteToUpdate) return;
 
-		noteToUpdate.title = newsValues.title;
-		noteToUpdate.description = newsValues.description;
-		notes.set(id, updatedNote);
+			noteToUpdate.title = newsValues.title;
+			noteToUpdate.description = newsValues.description;
+			notes.set(id, updatedNote);
 
-		return updatedNote;
+			updateStatus(response);
+		} catch (error) {
+			updateStatus(error as FetchError);
+		}
 	}
 
 	async function deleteNote(id: string): Promise<void> {
-		await deleteNoteInDB(id);
-		notes.delete(id);
+		status.loading.startLoading();
+		try {
+			const response = await deleteNoteInDB(id);
+			notes.delete(id);
+			updateStatus(response);
+		} catch (error) {
+			updateStatus(error as FetchError);
+		}
 	}
 
 	function getNoteById(id: string): ComputedRef<Note | null> {
@@ -81,13 +98,15 @@ function useNotesStore() {
 	}
 
 	return {
+		// states
 		notes: readonly(notes),
+		status: readonly(status),
+
+		// methods
 		createNote,
 		getNoteById,
-		error,
 		updateNote,
 		deleteNote,
-		loading: LoadingState.loading,
 	};
 }
 

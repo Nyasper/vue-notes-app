@@ -31,10 +31,10 @@
 				errorMessage.value = validation.message;
 				return;
 			}
-			const response = await AuthStore.loginUser(credentialts);
+			await AuthStore.loginUser(credentialts);
 
-			if (!response.success) {
-				errorMessage.value = response.message;
+			if (!AuthStore.authStatus.status) {
+				errorMessage.value = AuthStore.authStatus.message;
 				return;
 			}
 			router.push({ name: 'notesList' });

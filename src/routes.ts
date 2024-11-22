@@ -79,14 +79,6 @@ const router = createRouter({
 });
 
 router.beforeEach(async (to) => {
-	const response = await AuthStore.getUserInfo();
-
-	if (!response.success) {
-		if (to.name !== 'about') {
-			return { name: 'about' };
-		}
-	}
-
 	if (to.meta.requireAuth) {
 		if (!AuthStore.isAuth.value) {
 			if (to.name !== 'login') {
@@ -105,18 +97,17 @@ router.beforeEach(async (to) => {
 		}
 	}
 
-	if (to.meta.requireAdmin) {
-		if (!AuthStore.isAdmin.value) {
-			if (AuthStore.isAuth.value && to.name !== 'notesList') {
-				return { name: 'notesList' };
-			}
-		}
-	}
+	// if (to.meta.requireAdmin) {
+	// 	if (!AuthStore.isAdmin.value) {
+	// 		if (AuthStore.isAuth.value && to.name !== 'notesList') {
+	// 			return { name: 'notesList' };
+	// 		}
+	// 	}
+	// }
 });
 
 async function ifNotAuth(to: RouteLocationNormalizedGeneric) {
-	// await AuthStore.getUserInfo();
-	if (AuthStore.isAuth) return { name: 'notesList' };
+	if (AuthStore.isAuth.value) return { name: 'notesList' };
 }
 
 export default router;

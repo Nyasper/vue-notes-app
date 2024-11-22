@@ -1,13 +1,11 @@
-import type { ResponseWithData } from './response.type';
+import type { ResponseWithData, ResponseWithMessage } from './response.type';
 
-export class FetchError extends Error implements ResponseWithData<null> {
-	public readonly status: number;
-
+export class FetchError extends Error implements ResponseWithMessage {
+	public readonly statusCode: number;
 	public readonly success: boolean = false;
-	public readonly data: null = null;
 
-	constructor(messageParam: string, statusParam: number) {
+	constructor(messageParam: string, statusCodeParam: number) {
 		super(messageParam);
-		this.status = statusParam;
+		this.statusCode = statusCodeParam;
 	}
 }

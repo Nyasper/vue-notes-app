@@ -3,7 +3,7 @@ interface BaseResponse {
 }
 
 interface Status {
-	status: number;
+	statusCode: number;
 }
 
 export interface ResponseWithMessage extends BaseResponse, Status {

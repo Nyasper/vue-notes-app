@@ -17,7 +17,7 @@ export async function fetchClient<T, B = undefined>(
 	endpoint: string,
 	method: HttpMetod = 'GET',
 	body?: B
-): Promise<{ response: T; status: number }> {
+): Promise<{ response: T; statusCode: number }> {
 	try {
 		const res = await fetch(`${host}${apiUrl}${endpoint}`, {
 			credentials: 'include',
@@ -28,22 +28,22 @@ export async function fetchClient<T, B = undefined>(
 			},
 			body: body ? JSON.stringify(body) : undefined,
 		});
-		const status = res.status;
+		const statusCode = res.status;
 
 		if (!res.ok) {
 			const errorResponse = await res.json().catch(() => null);
 			throw new FetchError(
 				errorResponse?.message || 'Unexpected error',
-				status
+				statusCode
 			);
 		}
 		const response = (await res.json()) as T;
-		return { response, status: res.status };
+		return { response, statusCode: res.status };
 	} catch (error) {
 		if (error instanceof FetchError) {
 			throw error; // Propagar errores FetchError directamente
 		}
-		throw new FetchError('Network error occurred', 0);
+		throw new FetchError("Server doesn't respond", 500);
 	}
 }
 
@@ -53,5 +53,3 @@ export const notesBase = (endpoint: string) => `/notes${endpoint}`;
 export const adminUsersBase = (endpoint: string) => `/admin/users${endpoint}`;
 
 type HttpMetod = 'GET' | 'POST' | 'PUT' | 'DELETE';
-
-const successfullyCodes: number[] = [200];

@@ -1,17 +1,17 @@
 import { fetchClient, authBase } from './fetchClient';
 import type { ResponseWithData, ResponseWithMessage } from './response.type';
 import type { UserInfo } from '@/models/user.model';
-import type { FetchError } from './fetchError';
+import { FetchError } from './fetchError';
 
 export async function loginUser(
 	credentialts: LoginBody
 ): Promise<ResponseWithMessage> {
 	try {
-		const { response, status } = await fetchClient<
+		const { response, statusCode } = await fetchClient<
 			ResponseWithMessage,
 			LoginBody
 		>(authBase('/login'), 'POST', credentialts);
-		return { ...response, status };
+		return { ...response, statusCode };
 	} catch (error) {
 		return error as FetchError;
 	}
@@ -21,12 +21,12 @@ export async function registerUser(
 	credentials: RegisterBody
 ): Promise<ResponseWithMessage> {
 	try {
-		const { response, status } = await fetchClient<
+		const { response, statusCode } = await fetchClient<
 			ResponseWithMessage,
 			RegisterBody
 		>(authBase('/register'), 'POST', credentials);
 
-		return { ...response, status };
+		return { ...response, statusCode };
 	} catch (error) {
 		return error as FetchError;
 	}
@@ -34,26 +34,29 @@ export async function registerUser(
 
 export async function logoutUser(): Promise<ResponseWithMessage> {
 	try {
-		const { response, status } = await fetchClient<ResponseWithMessage>(
+		const { response, statusCode } = await fetchClient<ResponseWithMessage>(
 			authBase('/logout'),
 			'POST'
 		);
 
-		return { ...response, status };
+		return { ...response, statusCode };
 	} catch (error) {
 		return error as FetchError;
 	}
 }
 
-export async function getUserInfo(): Promise<ResponseWithData<UserInfo>> {
+export async function getUserInfo(): Promise<
+	ResponseWithData<UserInfo | null>
+> {
 	try {
-		const { response, status } = await fetchClient<ResponseWithData<UserInfo>>(
-			authBase('/info')
-		);
+		const { response, statusCode } = await fetchClient<
+			ResponseWithData<UserInfo>
+		>(authBase('/info'));
 
-		return { ...response, status };
-	} catch (error) {
-		return error as FetchError;
+		return { ...response, statusCode };
+	} catch (e) {
+		const response = e as FetchError;
+		return { ...response, data: null };
 	}
 }
 

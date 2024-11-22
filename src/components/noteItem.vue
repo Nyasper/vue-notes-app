@@ -22,7 +22,7 @@
 <style scoped>
 	.note {
 		background-color: rgb(18, 18, 18);
-		padding: 10px;
+		padding: 10px 15px;
 		margin: 20px;
 		width: 260px;
 		height: 300px;
