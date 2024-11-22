@@ -1,49 +1,47 @@
 <template>
-	<article id="taskFormContainer">
-		<form @submit.prevent="onSubmit" id="taskForm">
-			<h2>{{ isUpdateMode ? 'Update' : 'Create' }} note</h2>
-			<span id="titleCounter">{{ `${title.length}/60` }}</span>
-			<input
-				type="text"
-				placeholder="Add a Title"
-				class="input-title"
-				v-model="title"
-				required
-				maxlength="60"
-			/>
-			<textarea
-				class="input-description"
-				placeholder="Add a Description"
-				v-model="description"
-				required
-			/>
-			<section>
-				<button
-					id="saveButton"
-					type="submit"
-					:disabled="title.length === 0 || noteHasChanged"
-				>
-					{{ isUpdateMode ? 'update' : 'save' }}
-				</button>
-				<button
-					id="resetButton"
-					type="button"
-					:disabled="title.length === 0 || noteHasChanged"
-					@click.prevent="resetButtonAction"
-				>
-					reset
-				</button>
-				<button
-					v-if="isUpdateMode"
-					id="deleteButton"
-					type="button"
-					@click.prevent="deleteAction"
-				>
-					Delete
-				</button>
-			</section>
-		</form>
-	</article>
+	<form @submit.prevent="onSubmit" id="taskForm">
+		<h2>{{ isUpdateMode ? 'Update' : 'Create' }} note</h2>
+		<span id="titleCounter">{{ `${title.length}/60` }}</span>
+		<input
+			type="text"
+			placeholder="Add a Title"
+			class="input-title"
+			v-model="title"
+			required
+			maxlength="60"
+		/>
+		<textarea
+			class="input-description"
+			placeholder="Add a Description"
+			v-model="description"
+			required
+		/>
+		<section>
+			<button
+				id="saveButton"
+				type="submit"
+				:disabled="title.length === 0 || noteHasChanged"
+			>
+				{{ isUpdateMode ? 'update' : 'save' }}
+			</button>
+			<button
+				id="resetButton"
+				type="button"
+				:disabled="title.length === 0 || noteHasChanged"
+				@click.prevent="resetButtonAction"
+			>
+				reset
+			</button>
+			<button
+				v-if="isUpdateMode"
+				id="deleteButton"
+				type="button"
+				@click.prevent="deleteAction"
+			>
+				Delete
+			</button>
+		</section>
+	</form>
 </template>
 
 <script setup lang="ts">
@@ -104,7 +102,7 @@
 		justify-content: center;
 		align-items: center;
 
-		width: max-content;
+		width: 40%;
 		min-width: 30%;
 		min-height: max-content;
 		background-color: rgb(18, 18, 18);
@@ -127,8 +125,10 @@
 		padding: 10px;
 		height: 300px;
 		font-size: 20px;
-		width: 90%;
 		max-width: 60vw;
+		width: 90%;
+		max-width: 90%;
+		min-width: 100px;
 		overflow: auto;
 		background-color: transparent;
 		border: none;
@@ -144,10 +144,6 @@
 		font-size: 20px;
 		color: rgb(114, 114, 114);
 	}
-
-	/* #input-description:focus {
-		background-color: rgb(57, 57, 57);
-	} */
 
 	#saveButton,
 	#deleteButton,
@@ -174,12 +170,6 @@
 		color: rgb(64, 64, 64);
 	}
 
-	#taskFormContainer > form > h2 {
-		font-size: 30px;
-		padding: 10px;
-		margin: 10px;
-	}
-
 	#titleCounter {
 		font-size: 1.2em;
 		font-weight: bold;
@@ -187,19 +177,28 @@
 
 	@media only screen and (max-width: 768px) {
 		#taskForm {
-			width: 100%;
+			width: 90%;
 			align-items: center;
 			justify-content: center;
 
-			#input-title {
+			.input-title {
+				width: 96%;
 				height: 30px;
 				margin: 0;
-				width: 80%;
 			}
-			#input-description {
+			.input-description {
 				margin: 10px 0;
-				width: 80%;
+				width: 96%;
+				max-width: 100%;
 				height: 400px;
+			}
+
+			button {
+				font-size: 18px;
+				padding: 0 10px;
+				margin: 0 10px;
+				height: 60px;
+				width: max-content;
 			}
 		}
 	}

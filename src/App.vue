@@ -1,21 +1,11 @@
 <script setup lang="ts">
 	import Navbar from './components/navbar.vue';
-	import { AuthStore } from './stores/authStore';
+	import statusBar from './components/statusBar.vue';
 </script>
 
 <template>
 	<Navbar />
-	<div id="authState">
-		<ul>
-			<li
-				v-for="key in Object.keys(AuthStore.status)"
-				:class="AuthStore.status[key] ? 'bien' : 'mal	'"
-				:key
-			>
-				{{ key }}: {{ AuthStore.status[key] }}
-			</li>
-		</ul>
-	</div>
+	<statusBar />
 	<main id="mainContainer">
 		<RouterView />
 	</main>

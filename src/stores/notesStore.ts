@@ -19,23 +19,25 @@ import type { NoteStoreStatus } from './stores.types';
 function useNotesStore() {
 	const notes = reactive(new Map<string, Note>());
 
-	const { status, updateStatus } = useStatus({
-		success: false,
-		statusCode: 0,
-		message: '',
-		fetchedOnce: false,
-		loading: useLoading(),
-	});
+	let fetchedOnce = false;
+	const { status, updateStatus } = useStatus(
+		reactive({
+			success: false,
+			statusCode: 0,
+			message: '',
+			loading: useLoading(),
+		})
+	);
 
 	async function getData() {
-		if (status.fetchedOnce) return;
+		if (fetchedOnce) return;
 		status.loading.startLoading();
 
 		try {
 			const response = await getNotesFromDb();
 			if (!response.success) return;
 			response.data!.forEach(({ id, ...Note }) => notes.set(id, Note));
-			status.fetchedOnce = true;
+			fetchedOnce = true;
 			updateStatus(response);
 		} catch (error) {
 			updateStatus(error as FetchError);
@@ -50,7 +52,7 @@ function useNotesStore() {
 
 			const { id, ...newNote } = data as NoteWithId;
 			notes.set(id, newNote);
-
+			console.log({ response, newNote });
 			updateStatus(response);
 		} catch (error) {
 			updateStatus(error as FetchError);
@@ -86,8 +88,8 @@ function useNotesStore() {
 		status.loading.startLoading();
 		try {
 			const response = await deleteNoteInDB(id);
-			notes.delete(id);
 			updateStatus(response);
+			notes.delete(id);
 		} catch (error) {
 			updateStatus(error as FetchError);
 		}

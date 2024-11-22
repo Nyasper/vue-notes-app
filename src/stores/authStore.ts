@@ -22,13 +22,15 @@ function useAuthStore() {
 	}
 
 	// store status
-	const { status, updateStatus } = useStatus({
-		success: false,
-		statusCode: 0,
-		message: '',
-		loading: useLoading(),
-		donRetry: false,
-	});
+	let donRetry = false;
+	const { status, updateStatus } = useStatus(
+		reactive({
+			success: false,
+			statusCode: 0,
+			message: '',
+			loading: useLoading(),
+		})
+	);
 
 	async function getUserInfo(): Promise<void> {
 		// if (status.donRetry) return;
@@ -38,7 +40,7 @@ function useAuthStore() {
 			isAuth.value = userInfo.success ?? false;
 			isAdmin.value = userInfo.success && !!userInfo.data?.admin;
 			if (status.statusCode === 401) {
-				status.donRetry = true;
+				donRetry = true;
 			}
 
 			updateStatus(userInfo);

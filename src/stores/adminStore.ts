@@ -11,16 +11,18 @@ import type { FetchError } from '@/services/fetchError';
 
 function useAdminStore() {
 	const adminData = reactive(new Map<string, UserAdminData>());
-	const { status, updateStatus } = useStatus({
-		success: false,
-		statusCode: 0,
-		message: '',
-		loading: useLoading(),
-		fetchedOnce: false,
-	});
+	let fetchedOnce = false;
+	const { status, updateStatus } = useStatus(
+		reactive({
+			success: false,
+			statusCode: 0,
+			message: '',
+			loading: useLoading(),
+		})
+	);
 
 	async function getAdminData(): Promise<void> {
-		if (status.fetchedOnce) return;
+		if (fetchedOnce) return;
 		status.loading.startLoading();
 
 		try {
