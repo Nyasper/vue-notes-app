@@ -61,10 +61,10 @@ function useAuthStore() {
 		try {
 			status.loading.startLoading();
 			const response = await loginUserInDb(credentialts);
+
 			if (response.success) {
 				await getUserInfo();
 			}
-
 			updateStatus(response);
 		} catch (error) {
 			updateStatus(error as FetchError);

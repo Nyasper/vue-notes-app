@@ -111,6 +111,7 @@ function useNotesStore() {
 		getNoteById,
 		updateNote,
 		deleteNote,
+		getData,
 	};
 }
 

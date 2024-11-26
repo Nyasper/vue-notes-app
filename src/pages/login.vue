@@ -16,6 +16,7 @@
 	import type { LoginBody } from '@/services/authService';
 	import LoginForm from '@/components/loginForm.vue';
 	import ShowError from '@/components/showError.vue';
+	import { NotesStore } from '@/stores/notesStore';
 
 	const inputUsername = ref('');
 	const inputPassword = ref('');
@@ -33,7 +34,7 @@
 			return;
 		}
 		await AuthStore.loginUser(credentialts);
-
+		await NotesStore.getData();
 		if (!AuthStore.status.success) {
 			error.value = AuthStore.status.message;
 			return;
