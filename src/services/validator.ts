@@ -1,7 +1,12 @@
+import type { NoteInsert } from '@/models/notes.model.';
 import type { LoginBody, RegisterBody } from './authService';
 import type { ResponseWithMessage } from './response.type';
 
-export function validateLogin(credentialts: LoginBody): ResponseWithMessage {
+type ResponseWithMessageNoStatusCode = Omit<ResponseWithMessage, 'statusCode'>;
+
+export function validateLogin(
+	credentialts: LoginBody
+): ResponseWithMessageNoStatusCode {
 	const userDTOConsts = {
 		username: {
 			min: 3,
@@ -40,7 +45,7 @@ export function validateLogin(credentialts: LoginBody): ResponseWithMessage {
 
 export function validateRegister(
 	credentialts: RegisterBody
-): ResponseWithMessage {
+): ResponseWithMessageNoStatusCode {
 	if (credentialts.password !== credentialts.password2) {
 		return {
 			success: false,
@@ -56,4 +61,40 @@ export function validateRegister(
 		};
 
 	return loginResponse;
+}
+
+export function validateNote(
+	note: NoteInsert
+): ResponseWithMessageNoStatusCode {
+	const NoteDTOConsts = {
+		title: {
+			min: 2,
+			max: 70,
+		},
+		description: {
+			max: 1000,
+			default: '',
+		},
+	};
+
+	if (
+		note.title.length < NoteDTOConsts.title.min ||
+		note.title.length > NoteDTOConsts.title.max
+	) {
+		return {
+			success: false,
+			message: `Note title must have between ${NoteDTOConsts.title.min} and ${NoteDTOConsts.title.max} characters`,
+		};
+	}
+	if (note.description.length > NoteDTOConsts.description.max) {
+		return {
+			success: false,
+			message: `Note description must have less than ${NoteDTOConsts.description.max} characters`,
+		};
+	}
+
+	return {
+		success: true,
+		message: 'User logged successfully',
+	};
 }

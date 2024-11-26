@@ -13,17 +13,22 @@
 	import { NotesStore } from '@/stores/notesStore';
 	import NoteEditor from '@/components/noteEditor.vue';
 	import ShowError from '@/components/showError.vue';
+	import { validateNote } from '@/services/validator';
 	const title = ref('');
 	const description = ref('');
 	const error = ref<string | null>(null);
 
 	async function saveTask(): Promise<void> {
-		const taskToInsert = {
+		const noteToInsert = {
 			title: title.value,
 			description: description.value,
 		};
-
-		await NotesStore.createNote(taskToInsert);
+		const validation = validateNote(noteToInsert);
+		if (!validation.success) {
+			error.value = validation.message;
+			return;
+		}
+		await NotesStore.createNote(noteToInsert);
 		if (!NotesStore.status.success) {
 			error.value = NotesStore.status.message;
 			return;

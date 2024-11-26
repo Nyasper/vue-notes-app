@@ -25,6 +25,9 @@
 		padding: 10px 15px;
 		margin: 20px;
 		width: 260px;
+		max-width: 260px;
+		word-break: break-all;
+		overflow: hidden;
 		height: 300px;
 		border: 2px solid white;
 		display: flex;

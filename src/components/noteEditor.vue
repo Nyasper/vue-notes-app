@@ -1,19 +1,21 @@
 <template>
 	<form @submit.prevent="onSubmit" id="taskForm">
 		<h2>{{ isUpdateMode ? 'Update' : 'Create' }} note</h2>
-		<span id="titleCounter">{{ `${title.length}/60` }}</span>
+		<span id="titleCounter">{{ `${title.length}/70` }}</span>
 		<input
 			type="text"
 			placeholder="Add a Title"
 			class="input-title"
 			v-model="title"
 			required
-			maxlength="60"
+			minlength="2"
+			maxlength="70"
 		/>
 		<textarea
 			class="input-description"
 			placeholder="Add a Description"
 			v-model="description"
+			maxlength="1000"
 			required
 		/>
 		<section>
@@ -52,7 +54,7 @@
 	const title = defineModel<string>('title', { required: true });
 	const description = defineModel<string>('description', { required: true });
 
-	const { onSubmit, mode = 'create', id } = defineProps<Props>();
+	const { onSubmit, mode = 'create' } = defineProps<Props>();
 
 	const isUpdateMode = computed(() => mode === 'update');
 

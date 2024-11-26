@@ -18,6 +18,7 @@
 	import type { NoteUpdate } from '@/models/notes.model.';
 	import NoteEditor from '@/components/noteEditor.vue';
 	import ShowError from '@/components/showError.vue';
+	import { validateNote } from '@/services/validator';
 
 	const id = useRoute().params.key as string; // => get te 'key' parameter named as 'id'.
 	const error = ref<string | null>(null);
@@ -44,13 +45,17 @@
 	async function updateNoteAction(): Promise<void> {
 		if (note.value === null) return;
 
-		const taskUpdated: NoteUpdate = {
+		const noteToUpdate: NoteUpdate = {
 			title: provTitle.value,
 			description: provDesc.value,
 		};
+		const validation = validateNote(noteToUpdate);
+		if (!validation.success) {
+			error.value = validation.message;
+			return;
+		}
 
-		await NotesStore.updateNote(id, taskUpdated);
-
+		await NotesStore.updateNote(id, noteToUpdate);
 		if (!NotesStore.status.success) {
 			error.value = NotesStore.status.message;
 			return;
@@ -64,6 +69,7 @@
 		await NotesStore.deleteNote(id);
 		if (!NotesStore.status.success) {
 			error.value = NotesStore.status.message;
+			console.log(NotesStore.status.message);
 			return;
 		}
 		router.push({ name: 'notesList' });
