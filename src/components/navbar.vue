@@ -50,7 +50,7 @@
 		if (ask) {
 			const response = await AuthStore.logoutUser();
 			router.push({ name: 'login' });
-			window.location.reload();
+			// window.location.reload();
 		}
 	}
 

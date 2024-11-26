@@ -7,15 +7,17 @@
 		:onSubmit="updateNoteAction"
 		:deleteAction="deleteAction"
 	/>
+	<ShowError :error />
 </template>
 
 <script setup lang="ts">
-	import { computed, ref, watchEffect } from 'vue';
+	import { ref, watchEffect } from 'vue';
 	import { useRoute } from 'vue-router';
 	import router from '../routes';
 	import { NotesStore } from '@/stores/notesStore';
 	import type { NoteUpdate } from '@/models/notes.model.';
 	import NoteEditor from '@/components/noteEditor.vue';
+	import ShowError from '@/components/showError.vue';
 
 	const id = useRoute().params.key as string; // => get te 'key' parameter named as 'id'.
 	const error = ref<string | null>(null);
@@ -39,7 +41,7 @@
 		}
 	});
 
-	async function updateNoteAction() {
+	async function updateNoteAction(): Promise<void> {
 		if (note.value === null) return;
 
 		const taskUpdated: NoteUpdate = {
@@ -48,15 +50,22 @@
 		};
 
 		await NotesStore.updateNote(id, taskUpdated);
-		const { success, statusCode, message } = NotesStore.status;
-		console.log({ success, statusCode, message });
+
+		if (!NotesStore.status.success) {
+			error.value = NotesStore.status.message;
+			return;
+		}
 		router.push({ name: 'notesList' });
 	}
 
-	async function deleteAction() {
+	async function deleteAction(): Promise<void> {
 		if (note.value === null) return;
 
 		await NotesStore.deleteNote(id);
+		if (!NotesStore.status.success) {
+			error.value = NotesStore.status.message;
+			return;
+		}
 		router.push({ name: 'notesList' });
 	}
 </script>

@@ -1,5 +1,7 @@
 <template>
-	<article v-if="!error">
+	<section
+		v-if="AdminStore.status.success && !AdminStore.status.loading.loading"
+	>
 		<section>
 			<h2>username: {{ userInfo?.username }}</h2>
 			<h3>admin: {{ userInfo?.admin }}</h3>
@@ -19,21 +21,25 @@
 				</RouterLink>
 			</ul>
 		</section>
-	</article>
+	</section>
 
-	<article v-else>
-		<h2>Something went wrong</h2>
-	</article>
+	<section
+		v-else-if="!AdminStore.status.success && !AdminStore.status.loading.loading"
+	>
+		<h2>Something went wrong: {{ AdminStore.status.message }}</h2>
+	</section>
 </template>
 
 <script setup lang="ts">
 	import { useRoute } from 'vue-router';
 	import { AdminStore } from '@/stores/adminStore';
 	import NoteItem from '@/components/noteItem.vue';
+	import { ref } from 'vue';
 
-	const { error, getUserInfo } = AdminStore;
+	const { getUserInfo } = AdminStore;
 	const userId = useRoute().params.userId as string;
 	const userInfo = getUserInfo(userId);
+	const error = ref<string | null>(null);
 </script>
 
 <style scoped>

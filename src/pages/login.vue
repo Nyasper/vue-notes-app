@@ -5,7 +5,7 @@
 		v-model:password="inputPassword"
 		:submit-event="submitHandler"
 	/>
-	<p class="errorMessage" v-if="errorMessage.length > 0">{{ errorMessage }}</p>
+	<ShowError :error />
 </template>
 
 <script setup lang="ts">
@@ -15,31 +15,29 @@
 	import { validateLogin } from '@/services/validator';
 	import type { LoginBody } from '@/services/authService';
 	import LoginForm from '@/components/loginForm.vue';
+	import ShowError from '@/components/showError.vue';
 
 	const inputUsername = ref('');
 	const inputPassword = ref('');
-	const errorMessage = ref('');
 
-	async function submitHandler() {
-		try {
-			const credentialts: LoginBody = {
-				username: inputUsername.value,
-				password: inputPassword.value,
-			};
-			const validation = validateLogin(credentialts);
-			if (!validation.success) {
-				errorMessage.value = validation.message;
-				return;
-			}
-			await AuthStore.loginUser(credentialts);
+	const error = ref<string | null>(null);
 
-			if (!AuthStore.authStatus.status) {
-				errorMessage.value = AuthStore.authStatus.message;
-				return;
-			}
-			router.push({ name: 'notesList' });
-		} catch (error) {
-			console.error('un error');
+	async function submitHandler(): Promise<void> {
+		const credentialts: LoginBody = {
+			username: inputUsername.value,
+			password: inputPassword.value,
+		};
+		const validation = validateLogin(credentialts);
+		if (!validation.success) {
+			error.value = validation.message;
+			return;
 		}
+		await AuthStore.loginUser(credentialts);
+
+		if (!AuthStore.status.success) {
+			error.value = AuthStore.status.message;
+			return;
+		}
+		router.push({ name: 'notesList' });
 	}
 </script>

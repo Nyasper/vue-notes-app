@@ -1,18 +1,15 @@
 <template>
 	<Transition name="slide-fade">
-		<section v-if="!hidden">
+		<section v-if="!hidden && NotesStore.status?.message.length > 0">
 			<p :class="NotesStore.status.success ? 'ok' : 'error'">
 				{{ NotesStore.status.message }}
 			</p>
 		</section>
 	</Transition>
-	<section class="loader" v-if="NotesStore.status.loading.loading">
-		<span>loading</span>
-		<img src="/loadingSpinner.svg" alt="loader" />
-	</section>
 </template>
 
 <script setup lang="ts">
+	import { AuthStore } from '@/stores/authStore';
 	import { NotesStore } from '@/stores/notesStore';
 	import { ref, watch, Transition } from 'vue';
 	const hidden = ref(true);

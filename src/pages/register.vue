@@ -7,7 +7,7 @@
 		button-label="Register"
 		:submit-event="submitHandler"
 	/>
-	<p class="errorMessage" v-if="errorMessage.length > 0">{{ errorMessage }}</p>
+	<ShowError :error />
 </template>
 
 <script setup lang="ts">
@@ -17,42 +17,39 @@
 	import LoginForm from '@/components/loginForm.vue';
 	import { validateRegister } from '@/services/validator';
 	import type { RegisterBody } from '@/services/authService';
+	import ShowError from '@/components/showError.vue';
 
 	const inputUsername = ref('');
 	const inputPassword = ref('');
 	const inputPassword2 = ref('');
 
-	const errorMessage = ref('');
+	const error = ref<string | null>(null);
 
 	async function submitHandler() {
-		try {
-			const credentialts: RegisterBody = {
-				username: inputUsername.value,
-				password: inputPassword.value,
-				password2: inputPassword2.value,
-			};
+		const credentialts: RegisterBody = {
+			username: inputUsername.value,
+			password: inputPassword.value,
+			password2: inputPassword2.value,
+		};
 
-			const validation = validateRegister(credentialts);
-			if (!validation.success) {
-				errorMessage.value = validation.message;
-				return;
-			}
-
-			const response = await AuthStore.registerUser(credentialts);
-
-			if (!response.success) {
-				errorMessage.value = response.message;
-				return;
-			}
-
-			await AuthStore.loginUser(credentialts);
-			router.push({ name: 'notesList' });
-		} catch (error) {
-			if (error instanceof Error) {
-				errorMessage.value = error.message;
-				return;
-			}
-			errorMessage.value = `Error: ${error}`;
+		const validation = validateRegister(credentialts);
+		if (!validation.success) {
+			error.value = validation.message;
+			return;
 		}
+
+		await AuthStore.registerUser(credentialts);
+		if (!AuthStore.status.success) {
+			error.value = AuthStore.status.message;
+			return;
+		}
+
+		await AuthStore.loginUser(credentialts);
+		if (!AuthStore.status.success) {
+			error.value = AuthStore.status.message;
+			return;
+		}
+
+		router.push({ name: 'notesList' });
 	}
 </script>

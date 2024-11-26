@@ -1,20 +1,24 @@
 <template>
-	<section v-if="!error && !loading">
+	<section v-if="AuthStore.status.success && !AuthStore.status.loading.loading">
 		<h1>Welcome, {{ user.username }}!</h1>
-		<section v-if="notes.size === 0 && !loading">
+
+		<section v-if="notes.size === 0 && !AuthStore.status.loading.loading">
 			<h2 class="createMessage">
 				There are no notes created, start by
 				<router-link :to="{ name: 'noteCreate' }">creating one</router-link>
 			</h2>
 		</section>
+
 		<section v-else>
 			<NotesList :notes />
 			<h2 v-if="notes.size > 0">total notes: {{ notes.size }}</h2>
 		</section>
 	</section>
 
-	<section v-else>
-		<h2>Something went wrong</h2>
+	<section
+		v-else-if="!AuthStore.status.success && !AuthStore.status.loading.loading"
+	>
+		<h2>Something went wrong: {{ AuthStore.status.message }}</h2>
 	</section>
 </template>
 
@@ -23,7 +27,7 @@
 	import { NotesStore } from '@/stores/notesStore';
 	import NotesList from '@/components/notesList.vue';
 
-	const { notes, error, loading } = NotesStore;
+	const { notes } = NotesStore;
 	const { user } = AuthStore;
 </script>
 

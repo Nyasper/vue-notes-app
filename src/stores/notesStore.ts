@@ -41,6 +41,8 @@ function useNotesStore() {
 			updateStatus(response);
 		} catch (error) {
 			updateStatus(error as FetchError);
+		} finally {
+			status.loading.stopLoading();
 		}
 	}
 	getData();
@@ -52,7 +54,7 @@ function useNotesStore() {
 
 			const { id, ...newNote } = data as NoteWithId;
 			notes.set(id, newNote);
-			console.log({ response, newNote });
+
 			updateStatus(response);
 		} catch (error) {
 			updateStatus(error as FetchError);

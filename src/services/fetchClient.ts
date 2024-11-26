@@ -1,9 +1,9 @@
 import { FetchError } from './fetchError';
-import type { ResponseWithMessage } from './response.type';
 
 const mode = import.meta.env.MODE;
 
 const devHost = 'http://localhost:3000';
+
 const prodHost: string | undefined = import.meta.env.VITE_PROD_HOST;
 
 if (mode === 'production' && !prodHost) {

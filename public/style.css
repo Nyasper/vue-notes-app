@@ -75,12 +75,6 @@ h1 {
 	display: none;
 }
 
-.errorMessage {
-	color: rgb(180, 36, 36);
-	font-size: 1.1em;
-	padding: 5px 10px;
-}
-
 #mainContainer {
 	width: 90%;
 	margin: 0 auto;

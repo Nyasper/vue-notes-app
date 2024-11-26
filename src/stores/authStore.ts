@@ -61,10 +61,11 @@ function useAuthStore() {
 		try {
 			status.loading.startLoading();
 			const response = await loginUserInDb(credentialts);
-			await getUserInfo();
+			if (response.success) {
+				await getUserInfo();
+			}
 
 			updateStatus(response);
-			console.log({ loginRes: response });
 		} catch (error) {
 			updateStatus(error as FetchError);
 		}
@@ -90,7 +91,7 @@ function useAuthStore() {
 			isAuth.value = false;
 			isAdmin.value = false;
 			updateStatus(response);
-			console.log('deslogeando:');
+			console.log('deslogeando:', response);
 		} catch (error) {
 			updateStatus(error as FetchError);
 		}

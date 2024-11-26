@@ -80,6 +80,7 @@ const router = createRouter({
 
 router.beforeEach(async (to) => {
 	if (to.meta.requireAuth) {
+		await AuthStore.getUserInfo();
 		if (!AuthStore.isAuth.value) {
 			if (to.name !== 'login') {
 				return { name: 'login' };
@@ -96,14 +97,6 @@ router.beforeEach(async (to) => {
 			}
 		}
 	}
-
-	// if (to.meta.requireAdmin) {
-	// 	if (!AuthStore.isAdmin.value) {
-	// 		if (AuthStore.isAuth.value && to.name !== 'notesList') {
-	// 			return { name: 'notesList' };
-	// 		}
-	// 	}
-	// }
 });
 
 async function ifNotAuth(to: RouteLocationNormalizedGeneric) {
