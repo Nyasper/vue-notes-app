@@ -50,12 +50,6 @@ function useAuthStore() {
 		}
 	}
 	getUserInfo();
-	// const isAuth = computed(() => {
-	// 	const isAuth = !!user.id && !!user.username;
-	// 	console.log(isAuth);
-	// 	return isAuth;
-	// }); // !! => convert the values to boolean
-	// const isAdmin = computed(() => isAuth.value && user?.admin === true);
 
 	async function loginUser(credentialts: LoginBody): Promise<void> {
 		try {
@@ -91,7 +85,6 @@ function useAuthStore() {
 			isAuth.value = false;
 			isAdmin.value = false;
 			updateStatus(response);
-			console.log('deslogeando:', response);
 		} catch (error) {
 			updateStatus(error as FetchError);
 		}

@@ -63,6 +63,10 @@
 					en: 'View, create, edit, and delete notes associated with your user.',
 					es: 'Ver, crear, editar y eliminar las notas asociadas a su usuario.',
 				},
+				{
+					en: 'Admin mode, where you can view and delete other users. This feature is not available for normal users.',
+					es: 'Modo admin, en dónde puede ver otros usuarios y eliminarlos. Ésta funcionalidad no esta disponible para los usuarios normales.',
+				},
 			],
 		},
 	};
@@ -125,7 +129,8 @@
 			margin-bottom: 30px;
 		}
 
-		p {
+		p,
+		li {
 			font-size: 1.1em;
 			line-height: 1em;
 			margin: 0;

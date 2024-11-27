@@ -1,21 +1,23 @@
 <template>
 	<form @submit.prevent="onSubmit" id="taskForm">
 		<h2>{{ isUpdateMode ? 'Update' : 'Create' }} note</h2>
-		<span id="titleCounter">{{ `${title.length}/70` }}</span>
+		<span id="titleCounter">{{
+			`${title.length}/${NoteDTOConsts.title.max}`
+		}}</span>
 		<input
 			type="text"
 			placeholder="Add a Title"
 			class="input-title"
 			v-model="title"
 			required
-			minlength="2"
-			maxlength="70"
+			:minlength="NoteDTOConsts.title.min"
+			:maxlength="NoteDTOConsts.title.max"
 		/>
 		<textarea
 			class="input-description"
 			placeholder="Add a Description"
 			v-model="description"
-			maxlength="1000"
+			:maxlength="NoteDTOConsts.description.max"
 			required
 		/>
 		<section>
@@ -48,7 +50,8 @@
 
 <script setup lang="ts">
 	import type { NoteUpdate } from '@/models/notes.model.';
-
+	import { NoteDTOConsts } from '@/services/validator';
+	import { NotesStore } from '@/stores/notesStore';
 	import { computed, watchEffect } from 'vue';
 
 	const title = defineModel<string>('title', { required: true });
@@ -61,7 +64,8 @@
 	// default note
 	let initialNoteValues: NoteUpdate | null = null;
 	watchEffect(() => {
-		if (!initialNoteValues) {
+		if (initialNoteValues === null) {
+			console.log('cambio');
 			initialNoteValues = {
 				title: title.value,
 				description: description.value,
@@ -83,15 +87,19 @@
 	});
 
 	const resetButtonAction = () => {
+		console.log({
+			initialTitle: initialNoteValues?.title,
+			initialDesc: initialNoteValues?.description,
+		});
 		title.value = initialNoteValues!.title ?? '';
 		description.value = initialNoteValues!.description ?? '';
 	};
 
 	interface Props {
 		onSubmit: () => Promise<void>;
+		deleteAction?: () => Promise<void>;
 		mode?: 'create' | 'update';
 		id?: string;
-		deleteAction?: () => Promise<void>;
 	}
 </script>
 

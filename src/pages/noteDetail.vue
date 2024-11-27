@@ -32,8 +32,6 @@
 		provDesc.value = note.value?.description ?? '';
 	});
 
-	if (note?.value === null) error.value = 'Error on getting note with Id';
-
 	// default note
 	let initialNoteValues: NoteUpdate | null = null;
 	watchEffect(() => {
@@ -65,11 +63,12 @@
 
 	async function deleteAction(): Promise<void> {
 		if (note.value === null) return;
+		const ask = confirm('delete this note?');
+		if (!ask) return;
 
 		await NotesStore.deleteNote(id);
 		if (!NotesStore.status.success) {
 			error.value = NotesStore.status.message;
-			console.log(NotesStore.status.message);
 			return;
 		}
 		router.push({ name: 'notesList' });

@@ -63,20 +63,19 @@ export function validateRegister(
 	return loginResponse;
 }
 
+export const NoteDTOConsts = {
+	title: {
+		min: 2,
+		max: 70,
+	},
+	description: {
+		max: 1000,
+		default: '',
+	},
+};
 export function validateNote(
 	note: NoteInsert
 ): ResponseWithMessageNoStatusCode {
-	const NoteDTOConsts = {
-		title: {
-			min: 2,
-			max: 70,
-		},
-		description: {
-			max: 1000,
-			default: '',
-		},
-	};
-
 	if (
 		note.title.length < NoteDTOConsts.title.min ||
 		note.title.length > NoteDTOConsts.title.max

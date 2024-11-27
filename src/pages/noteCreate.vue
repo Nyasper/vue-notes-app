@@ -14,6 +14,7 @@
 	import NoteEditor from '@/components/noteEditor.vue';
 	import ShowError from '@/components/showError.vue';
 	import { validateNote } from '@/services/validator';
+
 	const title = ref('');
 	const description = ref('');
 	const error = ref<string | null>(null);
@@ -23,6 +24,7 @@
 			title: title.value,
 			description: description.value,
 		};
+
 		const validation = validateNote(noteToInsert);
 		if (!validation.success) {
 			error.value = validation.message;
@@ -33,6 +35,7 @@
 			error.value = NotesStore.status.message;
 			return;
 		}
+		console.log(NotesStore.status);
 		router.push({ name: 'notesList' });
 	}
 </script>
