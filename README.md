@@ -1,30 +1,37 @@
-# About this application
+# Vue Notes App
 
-## English
+A Vue.js notes application with user authentication, CRUD operations for notes, and an admin mode. Connects to a separate Hono backend deployed on Cloudflare Workers.
 
-In this application you can create an account and log in to create, edit, update, and delete (CRUD) notes that have a "title" and a "description".
+## Live Demo
 
-This project was created with Vue.js for the frontend, Hono.js with Cloudflare Workers for the backend, and Turso for the database.
+[https://vue-notes-app-rose.vercel.app](https://vue-notes-app-rose.vercel.app)
 
-Main Features of the Application:
+## Features
 
-- Register and login.
-- View, create, edit, and delete notes associated with your user.
-- Admin mode, where you can view and delete other users. This feature is not available for normal users.
+- User registration and login
+- Create, read, update, and delete notes (title + description)
+- Admin mode to view and delete other users
+- Responsive UI
 
-## Español
+## Tech Stack
 
-En esta aplicación puedes crear una cuenta e iniciar sesión para crear, editar, actualizar y eliminar notas (CRUD) que tengan un "título" y una "descripción".
+- **Vue.js** - Frontend framework
+- **TypeScript** - Type safety
+- **Hono** - Backend API (separate repo)
 
-Este proyecto se creó con Vue.js para el frontend, Hono.js con Cloudflare Workers para el backend y Turso para la base de datos.
+## Backend
 
-Características principales de la aplicación:
+This is the frontend only. The backend API lives in a separate repository:
 
-- Registrarse e iniciar sesión
-- Ver, crear, editar y eliminar las notas asociadas a su usuario
-- Modo admin, en dónde puede ver otros usuarios y eleminarlos. Ésta funcionalidad no esta disponible para los usuarios normales.
+**Backend repo:** [Nyasper/notes_app_hono_CFworkers](https://github.com/Nyasper/notes_app_hono_CFworkers)
 
-# SCREENSHOTS
+The backend is built with Hono, deployed on Cloudflare Workers, and uses Drizzle ORM for database access.
+
+## Related Projects
+
+- [Notes App Backend (Hono + Cloudflare Workers)](https://github.com/Nyasper/notes_app_hono_CFworkers) -- the API this frontend connects to
+
+## Screenshots
 
 Page Home (All notes)  
 ![all-notes](/Screenshots/all_notes.jpeg)
@@ -43,5 +50,3 @@ Page About
 
 Admin Mode
 ![admin-mode](/Screenshots/admin_mode.png)
-
-## [The backend repo used on this application:]("https://github.com/Nyasper/notes_app_hono_bun")
