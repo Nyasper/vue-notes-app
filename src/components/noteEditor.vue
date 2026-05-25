@@ -51,48 +51,31 @@
 <script setup lang="ts">
 	import type { NoteUpdate } from '@/models/notes.model.';
 	import { NoteDTOConsts } from '@/services/validator';
-	import { NotesStore } from '@/stores/notesStore';
-	import { computed, watchEffect } from 'vue';
+	import { computed } from 'vue';
 
 	const title = defineModel<string>('title', { required: true });
 	const description = defineModel<string>('description', { required: true });
 
-	const { onSubmit, mode = 'create' } = defineProps<Props>();
+	const { onSubmit, mode = 'create', initialValues } = defineProps<Props>();
 
 	const isUpdateMode = computed(() => mode === 'update');
 
-	// default note
-	let initialNoteValues: NoteUpdate | null = null;
-	watchEffect(() => {
-		if (initialNoteValues === null) {
-			console.log('cambio');
-			initialNoteValues = {
-				title: title.value,
-				description: description.value,
-			}; // once
-		}
-	});
-
 	const noteHasChanged = computed(() => {
-		if (
-			initialNoteValues === null ||
-			title.value === '' ||
-			description.value === ''
-		)
-			return false;
+		if (!initialValues) return false;
 		return (
-			title.value === initialNoteValues.title &&
-			description.value === initialNoteValues.description
+			title.value === initialValues.title &&
+			description.value === initialValues.description
 		);
 	});
 
 	const resetButtonAction = () => {
-		console.log({
-			initialTitle: initialNoteValues?.title,
-			initialDesc: initialNoteValues?.description,
-		});
-		title.value = initialNoteValues!.title ?? '';
-		description.value = initialNoteValues!.description ?? '';
+		if (initialValues) {
+			title.value = initialValues.title ?? '';
+			description.value = initialValues.description ?? '';
+		} else {
+			title.value = '';
+			description.value = '';
+		}
 	};
 
 	interface Props {
@@ -100,8 +83,10 @@
 		deleteAction?: () => Promise<void>;
 		mode?: 'create' | 'update';
 		id?: string;
+		initialValues?: NoteUpdate;
 	}
 </script>
+
 
 <style scoped>
 	#taskForm {

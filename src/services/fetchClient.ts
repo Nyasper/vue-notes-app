@@ -7,9 +7,10 @@ const serverHost =
     ? "http://localhost:3000"
     : import.meta.env.VITE_PROD_HOST;
 
-if (mode === "production" && serverHost === "http://localhost:3000") {
+if (mode === "production" && !import.meta.env.VITE_PROD_HOST) {
   throw new Error("'VITE_PROD_HOST' env variable not provided");
 }
+
 
 const apiBaseUrl = "/api/v1";
 

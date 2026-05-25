@@ -21,27 +21,53 @@ function useAdminStore() {
 		})
 	);
 
-	async function getAdminData(): Promise<void> {
-		if (fetchedOnce) return;
+	async function getAdminData(force = false): Promise<void> {
+		if (fetchedOnce && !force) return;
 		status.loading.startLoading();
 
 		try {
 			const response = await getUsersFromDb();
-			if (!response.success) return;
+			if (!response.success) {
+				updateStatus(response);
+				return;
+			}
+			adminData.clear();
 			response.data!.forEach(({ id, ...data }) => adminData.set(id, data));
 
-			updateStatus(response);
+			updateStatus(response, true);
 		} catch (e) {
 			updateStatus(e as FetchError);
+		} finally {
+			status.loading.stopLoading();
 		}
 	}
-	getAdminData();
+
 
 	async function deleteUser(id: string) {
 		status.loading.startLoading();
-		const response = await deleteUserFromDb(id);
-		await getAdminData();
-		updateStatus(response);
+		try {
+			const response = await deleteUserFromDb(id);
+			if (!response.success) {
+				updateStatus(response);
+				return;
+			}
+			await getAdminData(true);
+			updateStatus(response);
+		} catch (e) {
+			updateStatus(e as FetchError);
+		} finally {
+			status.loading.stopLoading();
+		}
+	}
+
+	function clear(): void {
+		adminData.clear();
+		fetchedOnce = false;
+		updateStatus({
+			success: false,
+			statusCode: 0,
+			message: '',
+		});
 	}
 
 	function getUserInfo(id: string): ComputedRef<UserAdminData | null> {
@@ -56,7 +82,10 @@ function useAdminStore() {
 		// methods
 		getUserInfo,
 		deleteUser,
+		getAdminData,
+		clear,
 	};
 }
 
 export const AdminStore = useAdminStore();
+

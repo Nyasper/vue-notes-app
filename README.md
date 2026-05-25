@@ -34,19 +34,14 @@ The backend is built with Hono, deployed on Cloudflare Workers, and uses Drizzle
 ## Screenshots
 
 Page Home (All notes)  
-![all-notes](/Screenshots/all_notes.jpeg)
+![all-notes](/screenshots/home.png)
 
 Create a Note  
-![create-note](/Screenshots/create_note.jpeg)
+![create-note](/screenshots/create_note.png)
 
 Update and Delete a Note  
-![update-delete-notes](/Screenshots/update_note.jpeg)
+![update-delete-notes](/screenshots/edit_note.png)
 
-Register page  
-![page-about](/Screenshots/page_register.jpeg)
+Admin Mode  
+![admin-mode](/screenshots/admin_view.png)
 
-Page About  
-![page-about](/Screenshots/page_about.jpeg)
-
-Admin Mode
-![admin-mode](/Screenshots/admin_mode.png)

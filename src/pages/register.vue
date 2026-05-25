@@ -18,6 +18,8 @@
 	import { validateRegister } from '@/services/validator';
 	import type { RegisterBody } from '@/services/authService';
 	import ShowError from '@/components/showError.vue';
+	import { ToastStore } from '@/stores/toastStore';
+	import { NotesStore } from '@/stores/notesStore';
 
 	const inputUsername = ref('');
 	const inputPassword = ref('');
@@ -35,6 +37,7 @@
 		const validation = validateRegister(credentialts);
 		if (!validation.success) {
 			error.value = validation.message;
+			ToastStore.error(validation.message);
 			return;
 		}
 
@@ -50,6 +53,8 @@
 			return;
 		}
 
+		await NotesStore.getData();
 		router.push({ name: 'notesList' });
 	}
 </script>
+

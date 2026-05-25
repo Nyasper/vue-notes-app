@@ -29,28 +29,36 @@ function useNotesStore() {
 		})
 	);
 
-	async function getData() {
-		if (fetchedOnce) return;
+	async function getData(force = false) {
+		if (fetchedOnce && !force) return;
 		status.loading.startLoading();
 
 		try {
 			const response = await getNotesFromDb();
-			if (!response.success) return;
+			if (!response.success) {
+				updateStatus(response);
+				return;
+			}
+			notes.clear(); // Clear existing notes so we don't mix different users' data
 			response.data!.forEach(({ id, ...Note }) => notes.set(id, Note));
 			fetchedOnce = true;
-			updateStatus(response);
+			updateStatus(response, true);
 		} catch (error) {
 			updateStatus(error as FetchError);
 		} finally {
 			status.loading.stopLoading();
 		}
 	}
-	getData();
+
 
 	async function createNote(noteToInsert: NoteInsert): Promise<void> {
 		status.loading.startLoading();
 		try {
 			const { data, ...response } = await createNoteInDB(noteToInsert);
+			if (!response.success || !data) {
+				updateStatus(response);
+				return;
+			}
 
 			const { id, ...newNote } = data as NoteWithId;
 			notes.set(id, newNote);
@@ -58,6 +66,8 @@ function useNotesStore() {
 			updateStatus(response);
 		} catch (error) {
 			updateStatus(error as FetchError);
+		} finally {
+			status.loading.stopLoading();
 		}
 	}
 
@@ -67,14 +77,23 @@ function useNotesStore() {
 	): Promise<void> {
 		status.loading.startLoading();
 		try {
-			if (!notes.has(paramId)) return;
+			if (!notes.has(paramId)) {
+				status.loading.stopLoading();
+				return;
+			}
 
 			const { data, ...response } = await updateNoteInDB(paramId, newsValues);
-			if (!response.success) return;
+			if (!response.success || !data) {
+				updateStatus(response);
+				return;
+			}
 
 			const { id, ...updatedNote } = data as NoteWithId;
 			const noteToUpdate = notes.get(paramId);
-			if (!noteToUpdate) return;
+			if (!noteToUpdate) {
+				status.loading.stopLoading();
+				return;
+			}
 
 			noteToUpdate.title = newsValues.title;
 			noteToUpdate.description = newsValues.description;
@@ -83,6 +102,8 @@ function useNotesStore() {
 			updateStatus(response);
 		} catch (error) {
 			updateStatus(error as FetchError);
+		} finally {
+			status.loading.stopLoading();
 		}
 	}
 
@@ -90,11 +111,28 @@ function useNotesStore() {
 		status.loading.startLoading();
 		try {
 			const response = await deleteNoteInDB(id);
-			updateStatus(response);
+			if (!response.success) {
+				updateStatus(response);
+				return;
+			}
 			notes.delete(id);
+			updateStatus(response);
 		} catch (error) {
 			updateStatus(error as FetchError);
+		} finally {
+			status.loading.stopLoading();
 		}
+	}
+
+	function clear(): void {
+		notes.clear();
+		fetchedOnce = false;
+		// Reset status state
+		updateStatus({
+			success: false,
+			statusCode: 0,
+			message: '',
+		});
 	}
 
 	function getNoteById(id: string): ComputedRef<Note | null> {
@@ -112,7 +150,9 @@ function useNotesStore() {
 		updateNote,
 		deleteNote,
 		getData,
+		clear,
 	};
 }
 
 export const NotesStore = useNotesStore();
+

@@ -17,6 +17,7 @@
 	import LoginForm from '@/components/loginForm.vue';
 	import ShowError from '@/components/showError.vue';
 	import { NotesStore } from '@/stores/notesStore';
+	import { ToastStore } from '@/stores/toastStore';
 
 	const inputUsername = ref('');
 	const inputPassword = ref('');
@@ -31,14 +32,16 @@
 		const validation = validateLogin(credentialts);
 		if (!validation.success) {
 			error.value = validation.message;
+			ToastStore.error(validation.message);
 			return;
 		}
 		await AuthStore.loginUser(credentialts);
-		await NotesStore.getData();
 		if (!AuthStore.status.success) {
 			error.value = AuthStore.status.message;
 			return;
 		}
+		await NotesStore.getData();
 		router.push({ name: 'notesList' });
 	}
 </script>
+

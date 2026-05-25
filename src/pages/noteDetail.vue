@@ -6,12 +6,13 @@
 		v-model:description="provDesc"
 		:onSubmit="updateNoteAction"
 		:deleteAction="deleteAction"
+		:initialValues="initialNoteValues"
 	/>
 	<ShowError :error />
 </template>
 
 <script setup lang="ts">
-	import { ref, watchEffect } from 'vue';
+	import { ref, watchEffect, computed } from 'vue';
 	import { useRoute } from 'vue-router';
 	import router from '../routes';
 	import { NotesStore } from '@/stores/notesStore';
@@ -32,13 +33,14 @@
 		provDesc.value = note.value?.description ?? '';
 	});
 
-	// default note
-	let initialNoteValues: NoteUpdate | null = null;
-	watchEffect(() => {
-		if (note.value && !initialNoteValues) {
-			initialNoteValues = { ...note.value }; // once
-		}
+	const initialNoteValues = computed<NoteUpdate | undefined>(() => {
+		if (!note.value) return undefined;
+		return {
+			title: note.value.title,
+			description: note.value.description,
+		};
 	});
+
 
 	async function updateNoteAction(): Promise<void> {
 		if (note.value === null) return;

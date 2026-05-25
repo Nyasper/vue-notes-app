@@ -94,6 +94,7 @@ export function validateNote(
 
 	return {
 		success: true,
-		message: 'User logged successfully',
+		message: 'Note is valid',
 	};
 }
+

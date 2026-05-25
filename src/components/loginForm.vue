@@ -25,13 +25,19 @@
 	</form>
 </template>
 
-<script setup>
-	defineProps(['mode', 'submitEvent']);
+<script setup lang="ts">
+	defineProps<Props>();
 
-	const username = defineModel('username');
-	const password = defineModel('password');
-	const password2 = defineModel('password2');
+	const username = defineModel<string>('username');
+	const password = defineModel<string>('password');
+	const password2 = defineModel<string>('password2');
+
+	interface Props {
+		mode: 'login' | 'register';
+		submitEvent: () => Promise<void> | void;
+	}
 </script>
+
 
 <style scoped>
 	#formContainer {

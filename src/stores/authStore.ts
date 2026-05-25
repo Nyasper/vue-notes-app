@@ -10,6 +10,9 @@ import {
 import type { FetchError } from '@/services/fetchError';
 import { useStatus } from '../composables/useStoreStatus';
 import { useLoading } from '../composables/useLoading';
+import { NotesStore } from './notesStore';
+import { AdminStore } from './adminStore';
+
 
 function useAuthStore() {
 	const user = reactive<UserInfo>({});
@@ -43,12 +46,13 @@ function useAuthStore() {
 				donRetry = true;
 			}
 
-			updateStatus(userInfo);
+			updateStatus(userInfo, true);
 			updateUserInfo(userInfo.data);
 		} catch (error) {
-			updateStatus(error as FetchError);
+			updateStatus(error as FetchError, true);
 		}
 	}
+
 	getUserInfo();
 
 	async function loginUser(credentialts: LoginBody): Promise<void> {
@@ -84,11 +88,17 @@ function useAuthStore() {
 				'token=; expires=Thu, 01 Jan 1970 00:00:00 UTC; path=/;';
 			isAuth.value = false;
 			isAdmin.value = false;
+			
+			// Clear user-specific stores to prevent session leakage
+			NotesStore.clear();
+			AdminStore.clear();
+			
 			updateStatus(response);
 		} catch (error) {
 			updateStatus(error as FetchError);
 		}
 	}
+
 
 	return {
 		// states

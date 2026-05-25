@@ -4,7 +4,10 @@ import type {
 	RouteRecordRaw,
 } from 'vue-router';
 import { AuthStore } from './stores/authStore';
+import { NotesStore } from './stores/notesStore';
+import { AdminStore } from './stores/adminStore';
 import About from './pages/about.vue';
+
 
 const routes: RouteRecordRaw[] = [
 	{
@@ -85,6 +88,14 @@ router.beforeEach(async (to) => {
 			if (to.name !== 'login') {
 				return { name: 'login' };
 			}
+		} else {
+			// Pre-fetch notes data for authenticated sessions
+			await NotesStore.getData();
+			
+			// Pre-fetch admin data if navigating to an admin page
+			if (to.meta.requireAdmin && AuthStore.isAdmin.value) {
+				await AdminStore.getAdminData();
+			}
 		}
 
 		// require admin
@@ -98,6 +109,7 @@ router.beforeEach(async (to) => {
 		}
 	}
 });
+
 
 async function ifNotAuth(to: RouteLocationNormalizedGeneric) {
 	if (AuthStore.isAuth.value) return { name: 'notesList' };

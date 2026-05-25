@@ -22,7 +22,6 @@
 		>
 			<li
 				v-for="navItem in filteredNavBarItems"
-				:class="{ hiddenElement: !sidePanelOpen }"
 			>
 				<router-link class="anchorItem" :to="{ name: navItem.routeName }">
 					{{ navItem.innerText }}
@@ -31,10 +30,10 @@
 			<li
 				v-if="AuthStore.isAuth.value"
 				class="logoutButton"
-				:class="{ hiddenElement: !sidePanelOpen }"
 			>
 				<p class="anchorItem" @click="logoutButton">Logout</p>
 			</li>
+
 		</ul>
 	</nav>
 </template>

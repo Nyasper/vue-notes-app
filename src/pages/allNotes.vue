@@ -23,13 +23,19 @@
 </template>
 
 <script setup lang="ts">
+	import { onMounted } from 'vue';
 	import { AuthStore } from '@/stores/authStore';
 	import { NotesStore } from '@/stores/notesStore';
 	import NotesList from '@/components/notesList.vue';
 
 	const { notes } = NotesStore;
 	const { user } = AuthStore;
+
+	onMounted(() => {
+		NotesStore.getData();
+	});
 </script>
+
 
 <style scoped>
 	.createMessage {
